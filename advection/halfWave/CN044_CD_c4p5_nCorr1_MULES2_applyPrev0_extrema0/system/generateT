@@ -1,0 +1,53 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+
+type            coded;
+
+// Load the library containing the 'coded' functionObject
+libs            ("libutilityFunctionObjects.so");
+
+name            generateT;
+
+codeInclude
+#{
+    #include "mathematicalConstants.H"
+    #include "volFields.H"
+#};
+
+codeWrite
+#{
+    using Foam::constant::mathematical::pi;
+    const dimensionedVector dx(dimless/dimLength, vector(1, 0, 0));
+    const volScalarField x(mesh().C() & dx);
+
+    const scalar hdx = 0.0125;
+    const scalar x0 = hdx, x1 = 0.2+hdx, x2 = 0.4+hdx;
+
+    volScalarField T
+    (
+        IOobject("T", mesh().time().name(), mesh()),
+        mesh(),
+        dimensionedScalar(dimless, scalar(0))
+    );
+    
+    forAll(T,i)
+    {
+        if (x[i] > x0 && x[i] <= x1)
+        {
+            T[i] = 0.25*(1-Foam::cos(pi*(x[i]-x0)/(x1-x0)));
+        }
+        else if (x[i] > x1 && x[i] <= x2)
+        {
+            T[i] = 0.5;
+        }
+    }
+
+    T.write();
+#};
+
+// ************************************************************************* //
