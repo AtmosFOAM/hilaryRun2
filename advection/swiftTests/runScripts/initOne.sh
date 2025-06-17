@@ -3,16 +3,16 @@
 if [ "$#" -ne 6 ]
 then
    echo usage: initOne.sh case smooth\|slotted uniform\|deforming\|divergent \
-                          dt nx withDensity\(true\|false\)
+                          withDensity\|noDensity dt nx
    exit
 fi
 
 case=$1
 tracerType=$2
 velocityType=$3
-dt=$4
-nx=$5
-withDensity=$6
+density=$4
+dt=$5
+nx=$6
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -24,7 +24,7 @@ if [[ ! -e $case ]]; then
     sed 's/DT/'$dt'/g' $SCRIPT_DIR/system/controlDict \
         > $case/system/controlDict
     cp $SCRIPT_DIR/system/fvSchemes $case/system/fvSchemes
-    if [[ $withDensity == true ]]; then
+    if [[ $density == withDensity ]]; then
         cp $SCRIPT_DIR/system/fvSolutionWith $case/system/fvSolution
         cp $SCRIPT_DIR/constant/rhoTracerDict $case/constant
         cp $SCRIPT_DIR/system/functionsWith $case/system/functions
@@ -47,10 +47,10 @@ if [[ ! -e $case/0 ]]; then
     # Set up the initial conditions
     rm -rf $case/[0-9]*
     cp -r $SCRIPT_DIR/0 $case
-    setVelocityField -case $case -dict velocityDict
-    if [[ $withDensity == true ]]; then
+    if [[ $density == withDensity ]]; then
         setTracerField -case $case -name rho -tracerDict rhoTracerDict
     fi
+    setVelocityField -case $case -dict velocityDict
     setTracerField -case $case -name T -tracerDict tracerDict
     rm $case/0/*f
     gmtFoam -case $case -time 0 UT

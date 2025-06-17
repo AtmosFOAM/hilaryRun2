@@ -50,4 +50,6 @@ timePrecision   6;
 
 runTimeModifiable false;
 
+libs ("libsolverFunctionObjects2.so");
+
 // ************************************************************************* //

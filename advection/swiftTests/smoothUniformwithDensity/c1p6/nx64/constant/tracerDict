@@ -1,0 +1,33 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  dev                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      tracerDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+type sinusoidal;
+// c + (a_x + b_x*Foam::cos(2*M_PI*k_x*(x-phi_x)/L_x))
+// * (a_y + b_y*Foam::cos(2*M_PI*k_y*(y-phi_y)/L_y))
+// * (a_z + b_z*Foam::cos(2*M_PI*k_z*(z-phi_z)/L_z));
+c  0.5;
+a_x 0;
+a_y 0;
+a_z 1;
+b_x 0.5;
+b_y 1;
+b_z 0;
+L_x 1000;
+L_y 1000;
+phi_x 250;
+phi_y 250;
+
