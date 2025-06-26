@@ -10,17 +10,17 @@ var=$1
 
 # Collect error norms in one file for each Courant number to plot
 inputFiles=()
-for case in smoothUniformDensity/c05 smoothUniformDensity/c1p6 \
-            smoothUniformDensity/c2 smoothUniformDensity/c2p1 \
-            smoothUniformDensity/c2p6 smoothUniformDensity/c5p1 \
-            smoothUniformDensity/c10; do
+for case in slottedUniformDensity_FCT0_gamma2_2/c05 slottedUniformDensity_FCT0_gamma2_2/c1p6 \
+            slottedUniformDensity_FCT0_gamma2_2/c2 slottedUniformDensity_FCT0_gamma2_2/c2p1 \
+            slottedUniformDensity_FCT0_gamma2_2/c2p6 slottedUniformDensity_FCT0_gamma2_2/c5p1 \
+            slottedUniformDensity_FCT0_gamma2_2/c10; do
     mkdir -p $case/plots
     c=`filename $case`
     echo "#dx l1 l2 linf normMass normVar" > $case/plots/${var}errorNorms.dat
     for dir in $case/nx*; do
         res=`echo $dir | awk -F"$case/nx" '{print $2}'`
         echo $case $res
-        tail -1 $case/nx$res/errorNorms.dat \
+        tail -1 $case/nx$res/${var}errorNorms.dat \
                 | awk '{print 1/'$((10#$res))', $2, $3, $4, $5, $6}' \
                 >> $case/plots/${var}errorNorms.dat
     done
@@ -28,9 +28,9 @@ for case in smoothUniformDensity/c05 smoothUniformDensity/c1p6 \
 done
 
 mkdir -p plots
-echo -e "#dx error\n0.01 1e-4\n0.1 .1" > plots/3rdOrder.dat
-echo -e "#dx error\n0.01 1e-3\n0.1 .1" > plots/2ndOrder.dat
-echo -e "#dx error\n0.01 1e-2\n0.1 .1" > plots/1stOrder.dat
+echo -e "#dx error\n0.01 1e-5\n0.1 .01" > plots/3rdOrder.dat
+echo -e "#dx error\n0.01 1e-4\n0.1 .01" > plots/2ndOrder.dat
+echo -e "#dx error\n0.01 1e-3\n0.1 .01" > plots/1stOrder.dat
 
 inputFiles=(${inputFiles[*]} \
             plots/3rdOrder.dat  plots/2ndOrder.dat  plots/1stOrder.dat)
@@ -52,7 +52,7 @@ dx=10
 ddx=2
 dxg=10
 ymin=1e-5
-ymax=1
+ymax=0.2
 dy=10
 ddy=1
 dyg=10

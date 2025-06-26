@@ -5,9 +5,10 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" \
 
 # Function to initialise a case
 function initOne {
-    if [ "$#" -ne 8 ]; then
+    if [ "$#" -ne 10 ]; then
         echo usage: initOne case smooth\|slotted uniform\|deforming\|divergent \
-                            withDensity\|noDensity dt nx plot|noPlot nFCT
+                            withDensity\|noDensity dt nx plot|noPlot nFCT \
+                            CCRIT CGRAD
         return 0
     fi
 
@@ -19,6 +20,8 @@ function initOne {
     nx=$6
     plot=$7
     nFCT=$8
+    cCrit=$9
+    cGrad=${10}
 
     # Create the case (if needed)
     if [[ ! -e $case ]]; then
@@ -27,18 +30,18 @@ function initOne {
             > $case/system/blockMeshDict
         sed 's/DT/'$dt'/g' $SCRIPT_DIR/system/controlDict \
             > $case/system/controlDict
-        cp $SCRIPT_DIR/system/fvSchemes $case/system/fvSchemes
+        cp $SCRIPT_DIR/system/fvSchemes  $case/system/fvSchemes
+        cp $SCRIPT_DIR/system/fvSolution $case/system/fvSolution
         if [[ $density == withDensity ]]; then
-            cp $SCRIPT_DIR/system/fvSolutionWith $case/system/fvSolution
             cp $SCRIPT_DIR/constant/rhoTracerDict $case/constant
-            sed 's/NFCT/'$nFCT'/g' $SCRIPT_DIR/system/functionsWith \
-                > $case/system/functions
+            cp $SCRIPT_DIR/system/functionsWith $case/system/functions
         else
-            cp $SCRIPT_DIR/system/fvSolutionWithout $case/system/fvSolution
-            sed 's/NFCT/'$nFCT'/g' $SCRIPT_DIR/system/functionsWithout \
-                > $case/system/functions
+            cp $SCRIPT_DIR/system/functionsWithout $case/system/functions
+            sed
         fi
-        
+        sed -i -e 's/NFCT/'$nFCT'/g' -e 's/CCRIT/'$cCrit'/g' \
+               -e 's/CGRAD/'$cGrad'/g' $case/system/functions
+
         ln -s $SCRIPT_DIR/constant/gmtDicts $case/constant
         ln -s $SCRIPT_DIR/constant/physicalProperties $case/constant
         ln -s $SCRIPT_DIR/constant/momentumTransport $case/constant
@@ -81,7 +84,7 @@ function postOne {
     for var in T rho; do
         if [[ -e $case/$time/$var ]]; then
             # Plot and calculate error norms
-            sumFields -case $case $T ${var}error $time $var 0 $var -scale1 -1
+            sumFields -case $case $time ${var}error $time $var 0 $var -scale1 -1
             if [[ $plot == plot ]]; then
                 gmtFoam -case $case -time $time $var
                 ev $case/$time/$var.pdf
@@ -100,9 +103,9 @@ function postOne {
 }
 
 function initRunPost {
-    if [ "$#" -ne 8 ]; then
+    if [ "$#" -ne 10 ]; then
         echo usage: runOne case smooth\|slotted uniform\|deforming\|divergent \
-                            withDensity\|noDensity dt nx plot|noPlot nFCT
+                     withDensity\|noDensity dt nx plot\|noPlot nFCT CCRIT CGRAD
         return 0
     fi
 
@@ -110,7 +113,7 @@ function initRunPost {
     plot=$7
 
     initOne $*
-    
+
     if [[ -e $case/0 && ! -e $case/1 ]]; then
         foamRun -case $case |& tee $case/log
     fi

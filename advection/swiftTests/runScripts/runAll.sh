@@ -22,41 +22,71 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/runScripts.sh
 
-# Convergence runs (with density)
-initRunPost smoothUniformDensity/c05/nx032  smooth uniform withDensity 0.8 32 noPlot 0
-initRunPost smoothUniformDensity/c05/nx064  smooth uniform withDensity 0.4 64 noPlot 0
-initRunPost smoothUniformDensity/c05/nx128 smooth uniform withDensity 0.2 128 noPlot 0
+# Slotted cylinder cases with density
+cRoot=slottedUniformDensity
+params="slotted uniform withDensity"
 
-initRunPost smoothUniformDensity/c1p6/nx032 smooth uniform withDensity 2.5 32 noPlot 0
-initRunPost smoothUniformDensity/c1p6/nx064 smooth uniform withDensity 1.25 64 noPlot 0
-initRunPost smoothUniformDensity/c1p6/nx128 smooth uniform withDensity 0.625 128 noPlot 0
+initRunPost ${cRoot}_FCT1_gamma2_2/c05/nx128 $params 0.2 128 plot 1 2 0.5
 
-initRunPost smoothUniformDensity/c2/nx025   smooth uniform withDensity 4 25 noPlot 0
-initRunPost smoothUniformDensity/c2/nx050   smooth uniform withDensity 2 50 noPlot 0
-initRunPost smoothUniformDensity/c2/nx100   smooth uniform withDensity 1 100 noPlot 0
+#initRunPost ${cRoot}_FCT0_gamma2_2/c2p5/nx208 $params 0.5 208 plot 0 2 0.5
+initRunPost ${cRoot}_FCT1_gamma2_2/c2p5/nx208 $params 0.5 208 plot 1 2 0.5
+initRunPost ${cRoot}_FCT2_gamma2_2/c2p5/nx208 $params 0.5 208 plot 2 2 0.5
+initRunPost ${cRoot}_FCT3_gamma2_2/c2p5/nx208 $params 0.5 208 plot 3 2 0.5
 
-initRunPost smoothUniformDensity/c2p1/nx026   smooth uniform withDensity 4 26 noPlot 0
-initRunPost smoothUniformDensity/c2p1/nx052   smooth uniform withDensity 2 52 noPlot 0
-initRunPost smoothUniformDensity/c2p1/nx104   smooth uniform withDensity 1 104 noPlot 0
+./runScripts/plotBounds.sh plots/c2p5_nx208_T \
+    ${cRoot}_FCT1_gamma2_2/c2p5/nx208 1-FCT \
+    ${cRoot}_FCT2_gamma2_2/c2p5/nx208 2-FCT \
+    ${cRoot}_FCT3_gamma2_2/c2p5/nx208 3-FCT
 
-initRunPost smoothUniformDensity/c2p6/nx032 smooth uniform withDensity 4 32 noPlot 0
-initRunPost smoothUniformDensity/c2p6/nx064 smooth uniform withDensity 2 64 noPlot 0
-initRunPost smoothUniformDensity/c2p6/nx128 smooth uniform withDensity 1 128 noPlot 0
+initRunPost ${cRoot}_FCT1_gamma2_2/c05/nx200 $params 0.125 200 plot 1 2 0.5
+initRunPost ${cRoot}_FCT1_gamma2_2/c2/nx200  $params 0.5   200 plot 1 2 0.5
+initRunPost ${cRoot}_FCT1_gamma2_2/c5/nx200  $params 1.25  200 plot 1 2 0.5
+initRunPost ${cRoot}_FCT1_gamma2_2/c10/nx200 $params 2.5   200 plot 1 2 0.5
 
-initRunPost smoothUniformDensity/c5p1/nx026 smooth uniform withDensity 10 26 noPlot 0
-initRunPost smoothUniformDensity/c5p1/nx064 smooth uniform withDensity 4 64 noPlot 0
-initRunPost smoothUniformDensity/c5p1/nx128 smooth uniform withDensity 2 128 noPlot 0
+./runScripts/plotBounds.sh plots/nx200_FCT1_T \
+    ${cRoot}_FCT1_gamma2_2/c05/nx200 c-0.5 \
+    ${cRoot}_FCT1_gamma2_2/c2/nx200  c-2 \
+    ${cRoot}_FCT1_gamma2_2/c5/nx200  c-5 \
+    ${cRoot}_FCT1_gamma2_2/c10/nx200 c-10
 
-initRunPost smoothUniformDensity/c10/nx050 smooth uniform withDensity 10 50 noPlot 0
-initRunPost smoothUniformDensity/c10/nx100 smooth uniform withDensity 5 100 noPlot 0
-initRunPost smoothUniformDensity/c10/nx200 smooth uniform withDensity 4 200 noPlot 0
+# Slotted cylinder cases without density
+cRoot=slottedUniformNoDensity
+params="slotted uniform noDensity"
+initRunPost ${cRoot}_FCT3_gamma2_2/c2p5/nx208 $params 0.5 208 plot 3 2 0.5
+
+
+# Convergence runs (of density)
+cRoot=slottedUniformDensity_FCT0_gamma2_2
+params="slotted uniform withDensity"
+params2="noPlot 0 2 0.5"
+
+initRunPost ${cRoot}/c05/nx032 $params 0.8 32 $params2
+initRunPost ${cRoot}/c05/nx064 $params 0.4 64 $params2
+initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+
+initRunPost ${cRoot}/c1p6/nx032 $params 2.5 32 $params2
+initRunPost ${cRoot}/c1p6/nx064 $params 1.25 64 $params2
+initRunPost ${cRoot}/c1p6/nx128 $params 0.625 128 $params2
+
+initRunPost ${cRoot}/c2/nx025 $params 4 25 $params2
+initRunPost ${cRoot}/c2/nx050 $params 2 50 $params2
+initRunPost ${cRoot}/c2/nx100 $params 1 100 $params2
+
+initRunPost ${cRoot}/c2p1/nx026 $params 4 26 $params2
+initRunPost ${cRoot}/c2p1/nx052 $params 2 52 $params2
+initRunPost ${cRoot}/c2p1/nx104 $params 1 104 $params2
+
+initRunPost ${cRoot}/c2p6/nx032 $params 4 32 $params2
+initRunPost ${cRoot}/c2p6/nx064 $params 2 64 $params2
+initRunPost ${cRoot}/c2p6/nx128 $params 1 128 $params2
+
+initRunPost ${cRoot}/c5p1/nx026 $params 10 26 $params2
+initRunPost ${cRoot}/c5p1/nx064 $params 4  64 $params2
+initRunPost ${cRoot}/c5p1/nx128 $params 2  128 $params2
+
+initRunPost ${cRoot}/c10/nx050 $params 10  50 $params2
+initRunPost ${cRoot}/c10/nx100 $params 5   100 $params2
+initRunPost ${cRoot}/c10/nx200 $params 2.5 200 $params2
 
 # convergence plot
 ./runScripts/plotErrorNorms.sh rho
-
-# Slotted cylinder cases
-initRunPost slottedUniform_noDensity/c05/nx032 slotted uniform noDensity 0.8 32 plot 0
-initRunPost slottedUniform_noDensity/c05/nx064 slotted uniform noDensity 0.4 64 plot 0
-initRunPost slottedUniform_noDensity/c05/nx128 slotted uniform noDensity 0.2 128 plot 0
-initRunPost slottedUniform_density/c05/nx128 slotted uniform withDensity 0.2 128 plot 0
-initRunPost slottedUniform_noDensityFCT/c05/nx128 slotted uniform noDensity 0.2 128 plot 1
