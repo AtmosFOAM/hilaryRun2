@@ -15,7 +15,8 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-timeVaryingWind false;
-type uniform;
-velocity (10 10 0);
+timeVaryingWind true;
+type deformationalNonDivergent;
+domainSize (1000 1000 0);
 endTime    100;
+backgroundFlow (10 10 0);

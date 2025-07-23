@@ -18,7 +18,7 @@ plotBoundaryDots false;
 FieldsToPlot
 (
     [T filledContours -0.2  1.2 0.1 "$GMTU/colours/wh-bl-gr-ye-re.cpt"]
-    [U vectors 3 17 "black"]
+    [U vectors 2 31 "black"]
 );
 
 //region "0e3/450e3/0/30e3";

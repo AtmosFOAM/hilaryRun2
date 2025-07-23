@@ -5,10 +5,10 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" \
 
 # Function to initialise a case
 function initOne {
-    if [ "$#" -ne 10 ]; then
+    if [ "$#" -ne 12 ]; then
         echo usage: initOne case smooth\|slotted uniform\|deforming\|divergent \
-                            withDensity\|noDensity dt nx plot\|noPlot nFCT \
-                            CCRIT CGRAD
+                            withDensity\|noDensity\|uniDensity dt nx \
+                            plot\|noPlot nFCT CCRIT CGRAD CORRSCHEME RK3\|RK4
         return 0
     fi
 
@@ -22,7 +22,19 @@ function initOne {
     nFCT=$8
     cCrit=$9
     cGrad=${10}
-
+    corrScheme=${11}
+    RK=${12}
+    
+    if [[ $RK == RK3 ]]; then
+        RK='3 3((1 0 0)\n                        (0.25 0.25 0)                        (0.16666666667 0.16666666667 0.66666666666))'
+    elif [[ $RK == RK4 ]]; then
+        RK='4 4((0.5 0 0 0)\n          (0 0.5 0 0)\n          (0 0 1 0)\n          (0.16666666667 0.33333333333 0.33333333333 0.16666666667))'
+    else
+        echo RK scheme $RK not known. Known schemes are RK3 and RK4
+        return 0
+    fi
+    echo $RK
+    
     # Create the case (if needed)
     if [[ ! -e $case ]]; then
         mkdir -p $case/constant $case/system
@@ -32,15 +44,16 @@ function initOne {
             > $case/system/controlDict
         cp $SCRIPT_DIR/system/fvSchemes  $case/system/fvSchemes
         cp $SCRIPT_DIR/system/fvSolution $case/system/fvSolution
+        cp $SCRIPT_DIR/system/functionsWith $case/system/functions
         if [[ $density == withDensity ]]; then
             cp $SCRIPT_DIR/constant/rhoTracerDict $case/constant
-            cp $SCRIPT_DIR/system/functionsWith $case/system/functions
-        else
+        fi
+        if [[ $density == noDensity ]]; then
             cp $SCRIPT_DIR/system/functionsWithout $case/system/functions
-            sed
         fi
         sed -i -e 's/NFCT/'$nFCT'/g' -e 's/CCRIT/'$cCrit'/g' \
-               -e 's/CGRAD/'$cGrad'/g' $case/system/functions
+               -e 's/CGRAD/'$cGrad'/g' -e 's/CORRSCHEME/'$corrScheme'/g' \
+               -e "s:RKCOEFFS:$RK:g" $case/system/functions
 
         ln -s $SCRIPT_DIR/constant/gmtDicts $case/constant
         ln -s $SCRIPT_DIR/constant/physicalProperties $case/constant
@@ -103,9 +116,10 @@ function postOne {
 }
 
 function initRunPost {
-    if [ "$#" -ne 10 ]; then
-        echo usage: runOne case smooth\|slotted uniform\|deforming\|divergent \
-                     withDensity\|noDensity dt nx plot\|noPlot nFCT CCRIT CGRAD
+    if [ "$#" -ne 12 ]; then
+        echo usage: initRunPost case smooth\|slotted uniform\|deforming\|divergent \
+             withDensity\|uniDensity\|noDensity dt nx plot\|noPlot nFCT \
+             CCRIT CGRAD CORRSCHEME RK3\|RK4
         return 0
     fi
 

@@ -22,16 +22,57 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/runScripts.sh
 
-# Slotted cylinder cases with density
-cRoot=slottedUniformDensity
+# Slotted cylinder cases with varying density, quintic upwind, RK4
+cRoot=slottedUniformDensityQuinticRK4_FCT0
 params="slotted uniform withDensity"
+params2="plot 0 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+#initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
 
-initRunPost ${cRoot}_FCT1_gamma2_2/c05/nx128 $params 0.2 128 plot 1 2 0.5
+cRoot=slottedUniformUniDensityQuinticRK4_FCT0
+params="slotted uniform uniDensity"
+params2="plot 0 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+#initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
 
-#initRunPost ${cRoot}_FCT0_gamma2_2/c2p5/nx208 $params 0.5 208 plot 0 2 0.5
-initRunPost ${cRoot}_FCT1_gamma2_2/c2p5/nx208 $params 0.5 208 plot 1 2 0.5
-initRunPost ${cRoot}_FCT2_gamma2_2/c2p5/nx208 $params 0.5 208 plot 2 2 0.5
-initRunPost ${cRoot}_FCT3_gamma2_2/c2p5/nx208 $params 0.5 208 plot 3 2 0.5
+cRoot=slottedUniformDensityQuinticRK4_FCT1
+params="slotted uniform withDensity"
+params2="plot 1 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+#initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
+
+cRoot=slottedUniformUniDensityQuinticRK4_FCT1
+params="slotted uniform uniDensity"
+params2="plot 1 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+#initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
+
+#Non-divergent, deformational test
+cRoot=slottedDeformingUniDensityQuinticRK4_FCT0
+params="slotted deforming uniDensity"
+params2="plot 0 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
+
+cRoot=slottedDeformingUniDensityQuinticRK4_FCT1
+params="slotted deforming uniDensity"
+params2="plot 1 1.4 0.3 quinticUpwind RK4"
+#initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+initRunPost ${cRoot}/c5/nx128 $params 2 128 $params2
+
+
+
+
+
+
+
+
+
+
+
+
+# Old
+
 
 ./runScripts/plotBounds.sh plots/c2p5_nx208_T \
     ${cRoot}_FCT1_gamma2_2/c2p5/nx208 1-FCT \
@@ -55,18 +96,28 @@ params="slotted uniform noDensity"
 initRunPost ${cRoot}_FCT3_gamma2_2/c2p5/nx208 $params 0.5 208 plot 3 2 0.5
 
 
-# Convergence runs (of density)
-cRoot=slottedUniformDensity_FCT0_gamma2_2
+# Convergence runs (of density) for quinticUpwind
+cRoot=slottedUniformDensity_FCT0_quint
 params="slotted uniform withDensity"
-params2="noPlot 0 2 0.5"
+params2="noPlot 0 1.4 0.3 quinticUpwind"
+
+#initRunPost ${cRoot}/c01/nx032 $params 0.16 32 $params2
+#initRunPost ${cRoot}/c01/nx064 $params 0.08 64 $params2
+#initRunPost ${cRoot}/c01/nx128 $params 0.04 128 $params2
 
 initRunPost ${cRoot}/c05/nx032 $params 0.8 32 $params2
 initRunPost ${cRoot}/c05/nx064 $params 0.4 64 $params2
 initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
 
-initRunPost ${cRoot}/c1p6/nx032 $params 2.5 32 $params2
-initRunPost ${cRoot}/c1p6/nx064 $params 1.25 64 $params2
-initRunPost ${cRoot}/c1p6/nx128 $params 0.625 128 $params2
+initRunPost ${cRoot}/c08/nx016 $params 2.5 16 $params2
+initRunPost ${cRoot}/c08/nx032 $params 1.25 32 $params2
+initRunPost ${cRoot}/c08/nx064 $params 0.625 64 $params2
+initRunPost ${cRoot}/c08/nx128 $params 0.3125 128 $params2
+
+initRunPost ${cRoot}/c1p4/nx014 $params 5 14 $params2
+initRunPost ${cRoot}/c1p4/nx028 $params 2.5 28 $params2
+initRunPost ${cRoot}/c1p4/nx056 $params 1.25 56 $params2
+initRunPost ${cRoot}/c1p4/nx112 $params 0.625 112 $params2
 
 initRunPost ${cRoot}/c2/nx025 $params 4 25 $params2
 initRunPost ${cRoot}/c2/nx050 $params 2 50 $params2
@@ -89,4 +140,18 @@ initRunPost ${cRoot}/c10/nx100 $params 5   100 $params2
 initRunPost ${cRoot}/c10/nx200 $params 2.5 200 $params2
 
 # convergence plot
-./runScripts/plotErrorNorms.sh rho
+./runScripts/plotErrorNorms.sh rho slottedUniformDensity_FCT0_quint
+
+# Tests of FCT with quinticUpwind
+cRoot=slottedUniformDensity_FCT1_quint
+params="slotted uniform withDensity"
+params2="plot 1 1.4 0.3 quinticUpwind"
+
+initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2
+
+# Test of FCT with uniform density
+cRoot=slottedUniformUniDensity_FCT1_quint
+params="slotted uniform uniDensity"
+params2="plot 1 1.4 0.3 quinticUpwind"
+
+initRunPost ${cRoot}/c05/nx128 $params 0.2 128 $params2

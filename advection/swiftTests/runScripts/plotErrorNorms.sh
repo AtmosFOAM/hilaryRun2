@@ -1,19 +1,25 @@
 #!/bin/bash -e
 
-if [ "$#" -ne 1 ]
+if [ "$#" -ne 2 ]
 then
-   echo usage: plotErrorNorms.sh var
+   echo usage: plotErrorNorms.sh var rootDir
    exit
 fi
 
 var=$1
+root=$2
+outFile=$root/plots/${var}errorNorms.eps
+
+mkdir -p $root/plots
 
 # Collect error norms in one file for each Courant number to plot
 inputFiles=()
-for case in slottedUniformDensity_FCT0_gamma2_2/c05 slottedUniformDensity_FCT0_gamma2_2/c1p6 \
-            slottedUniformDensity_FCT0_gamma2_2/c2 slottedUniformDensity_FCT0_gamma2_2/c2p1 \
-            slottedUniformDensity_FCT0_gamma2_2/c2p6 slottedUniformDensity_FCT0_gamma2_2/c5p1 \
-            slottedUniformDensity_FCT0_gamma2_2/c10; do
+for case in $root/c05 \
+            $root/c08 \
+            $root/c1p4 \
+            $root/c2 \
+            $root/c5p1 \
+            $root/c10; do
     mkdir -p $case/plots
     c=`filename $case`
     echo "#dx l1 l2 linf normMass normVar" > $case/plots/${var}errorNorms.dat
@@ -34,15 +40,14 @@ echo -e "#dx error\n0.01 1e-3\n0.1 .01" > plots/1stOrder.dat
 
 inputFiles=(${inputFiles[*]} \
             plots/3rdOrder.dat  plots/2ndOrder.dat  plots/1stOrder.dat)
-outFile=plots/${var}errorNorms.eps
-col=(3 3 3 3 3 3 3 2 2 2)
+col=(3 3 3 3 3 3  2 2 2)
 colx=1
-legends=("c = 0.5" "c = 1.6" "c = 2" "c = 2.1" "c = 2.6" "c = 5.1" "c = 10"
-         "1st/2nd/3rd" "" "")
-pens=("black" "blue" "red" "green" "cyan" "magenta" "grey"
+legends=("c = 0.5" "c = 0.8" "c = 1.4" "c = 2" "c = 5.1"
+          "c = 10" "1st/2nd/3rd" "" "")
+pens=("black" "blue" "red" "green" "cyan" "magenta" 
       "0.25,black,1_4:0" "0.25,black,1_4:0" "0.25,black,1_4:0")
 symbols=("x10p" "c10p" "a10p"
-         "+10p" "t10p" "h10p" "s10p"  "" "" "")
+         "+10p" "t10p" "h10p"   "" "" "")
 #spens=("black" "blue" "red" "green" "cyan" "magenta" "" "" "")
 xlabel='@~D@~x'
 ylabel=''
@@ -51,14 +56,14 @@ xmax=0.1
 dx=10
 ddx=2
 dxg=10
-ymin=1e-5
+ymin=1e-6
 ymax=0.2
 dy=10
 ddy=1
 dyg=10
 xscale=*1
 yscale=*1
-legPos=x6.5/0
+legPos=x0.1/1.7
 nSkip=1
 projection=X10cl/7.5cl
 gv=0
