@@ -7,7 +7,7 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" \
 function initOne {
     if [ "$#" -ne 10 ]; then
         echo usage: initOne case dt nx \
-                            smooth\|slotted uniform\|deforming\|divergent \
+                            smooth\|slotted\|uniT uniform\|deforming\|divergent \
                             withDensity\|noDensity\|uniDensity  \
                             CORRSCHEME RK3\|RK4 nFCT plot\|noPlot
         return 0
@@ -116,7 +116,7 @@ function postOne {
 function initRunPost {
     if [ "$#" -ne 10 ]; then
         echo usage: initRunPost case dt nx \
-                            smooth\|slotted uniform\|deforming\|divergent \
+                            smooth\|slotted\|uniT uniform\|deforming\|divergent \
                             withDensity\|noDensity\|uniDensity  \
                             CORRSCHEME RK3\|RK4 nFCT plot\|noPlot
         return 0

@@ -6,8 +6,8 @@
 
 # Check for consistency (T==1 or uniT)
 # with varying velocity
-# Check using rho==1 
-# with varying velocity
+# Check using rho==1   yes
+# with varying velocity yes
 # Check order of convergence in space and time
 # Mass conservation?
 
@@ -27,8 +27,12 @@ params="smooth uniform uniDensity cubicUpwind RK3 0 plot"
 cRoot=slottedDeformingUniDensityCubicRK3FCT0
 params="slotted deforming uniDensity cubicUpwind RK3 0 plot"
 #initRunPost ${cRoot}/c05/nx128 0.2 128 $params
-initRunPost ${cRoot}/c5/nx128 2 128 $params
+#initRunPost ${cRoot}/c5/nx128 2 128 $params
 
+cRoot=uniTDeformingDensityCubicRK3FCT0
+params="uniT deforming withDensity cubicUpwind RK3 0 plot"
+#initRunPost ${cRoot}/c05/nx128 0.2 128 $params
+initRunPost ${cRoot}/c5/nx128 2 128 $params
 
 
 # convergence plot

@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{   version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+    default         Euler;
+}
+
+gradSchemes
+{
+    default         none;
+}
+
+divSchemes
+{
+    default         none;
+    // div(phiv,rho)   Gauss upwind;
+    // div(phi,T)      adImExStrangAdvection
+    // {
+    //     RK_ButcherCoeffs 3 3((1 0 0)
+    //                          (0.25 0.250 0)
+    //                          (0.16667 0.16667 0.66666));
+    //     //alpha 0;
+    //     //beta 0;
+    //     //gamma 1;
+    //     gammaScale 6.5;
+    //     gamma1cMax 2.5;
+    //     correctionScheme cubicUpwind;
+    //     density    rho;
+    // };
+}
+
+laplacianSchemes
+{
+    default         none;
+}
+
+interpolationSchemes
+{
+    default         none;
+}
+
+snGradSchemes
+{
+    default         none;
+}
+
+fluxRequired
+{
+    T;
+    rho;
+}
+
+// ************************************************************************* //
