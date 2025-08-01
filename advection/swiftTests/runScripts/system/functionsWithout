@@ -23,7 +23,7 @@ FoamFile
     advectingFlux=phiv,
     massFlux=none,
     RK_ButcherCoeffs=RKCOEFFS,
-    gammaCoeffs=(CCRIT CGRAD),
+    betaCoeffs=(CCRIT BMAX CGRAD),
     correctionScheme=CORRSCHEME,
     velocityFieldDict=velocityDict
 )

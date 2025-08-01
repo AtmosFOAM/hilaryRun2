@@ -5,11 +5,11 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" \
 
 # Function to initialise a case
 function initOne {
-    if [ "$#" -ne 10 ]; then
+    if [ "$#" -ne 13 ]; then
         echo usage: initOne case dt nx \
                             smooth\|slotted\|uniT uniform\|deforming\|divergent \
                             withDensity\|noDensity\|uniDensity  \
-                            CORRSCHEME RK3\|RK4 nFCT plot\|noPlot
+                            CORRSCHEME RK3\|RK4 nFCT B1 B2 B3 plot\|noPlot
         return 0
     fi
 
@@ -22,7 +22,10 @@ function initOne {
     corrScheme=$7
     RK=$8
     nFCT=$9
-    plot=${10}
+    b1=${10}
+    b2=${11}
+    b3=${12}
+    plot=${13}
     
     if [[ $RK == RK3 ]]; then
         RK='3 3((1 0 0)\n                        (0.25 0.25 0)                        (0.16666666667 0.16666666667 0.66666666666))'
@@ -43,16 +46,9 @@ function initOne {
             > $case/system/controlDict
         cp $SCRIPT_DIR/system/fvSchemes  $case/system/fvSchemes
         cp $SCRIPT_DIR/system/fvSolution $case/system/fvSolution
-        cp $SCRIPT_DIR/system/functionsWith $case/system/functions
         if [[ $density == withDensity ]]; then
             cp $SCRIPT_DIR/constant/rhoTracerDict $case/constant
         fi
-        if [[ $density == noDensity ]]; then
-            cp $SCRIPT_DIR/system/functionsWithout $case/system/functions
-        fi
-        sed -i -e 's/NFCT/'$nFCT'/g' -e 's/CORRSCHEME/'$corrScheme'/g' \
-               -e "s:RKCOEFFS:$RK:g" $case/system/functions
-
         ln -s $SCRIPT_DIR/constant/gmtDicts $case/constant
         ln -s $SCRIPT_DIR/constant/physicalProperties $case/constant
         ln -s $SCRIPT_DIR/constant/momentumTransport $case/constant
@@ -61,6 +57,16 @@ function initOne {
         cp $SCRIPT_DIR/constant/${velocityType}VelocityDict \
             $case/constant/velocityDict
     fi
+    # Update some scheme parameters
+    if [[ $density == withDensity ]]; then
+        cp $SCRIPT_DIR/system/functionsWith $case/system/functions
+    else
+        cp $SCRIPT_DIR/system/functionsWithout $case/system/functions
+    fi
+    sed -i -e 's/NFCT/'$nFCT'/g' -e 's/CORRSCHEME/'$corrScheme'/g' \
+           -e "s:RKCOEFFS:$RK:g" -e "s:CCRIT:$b1:g" -e "s:BMAX:$b2:g"\
+           -e "s:CGRAD:$b3:g" $case/system/functions
+    
     if [[ ! -e $case/0 ]]; then
         # Mesh generation
         blockMesh -case $case
@@ -114,16 +120,16 @@ function postOne {
 }
 
 function initRunPost {
-    if [ "$#" -ne 10 ]; then
+    if [ "$#" -ne 13 ]; then
         echo usage: initRunPost case dt nx \
                             smooth\|slotted\|uniT uniform\|deforming\|divergent \
                             withDensity\|noDensity\|uniDensity  \
-                            CORRSCHEME RK3\|RK4 nFCT plot\|noPlot
+                            CORRSCHEME RK3\|RK4 nFCT B1 B2 B3 plot\|noPlot
         return 0
     fi
 
     case=$1
-    plot=${10}
+    plot=${13}
 
     initOne $*
 
@@ -135,33 +141,33 @@ function initRunPost {
 }
 
 function convergenceTest {
-    if [ "$#" -ne 7 ]; then
+    if [ "$#" -ne 10]; then
         echo usage: convergenceTest case smooth\|slotted\|uniT \
                             uniform\|deforming\|divergent \
                             withDensity\|noDensity\|uniDensity  \
-                            CORRSCHEME RK3\|RK4 nFCT
+                            CORRSCHEME RK3\|RK4 nFCT B1 B2 B3
         return 0
     fi
     
     cRoot=$1
     
-    initRunPost ${cRoot}/c05/nx128 0.2 128 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c05/nx064 0.4 64 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c05/nx032 0.8 32 $2 $3 $4 $5 $6 $7 0
+    #initRunPost ${cRoot}/c05/nx128 0.2 128 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    #initRunPost ${cRoot}/c05/nx064 0.4 64 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    #initRunPost ${cRoot}/c05/nx032 0.8 32 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
 
-    initRunPost ${cRoot}/c1/nx200 0.25 200 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c1/nx100 0.5 100 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c1/nx050 1 50 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c1/nx025 2 25 $2 $3 $4 $5 $6 $7 0
+    #initRunPost ${cRoot}/c1/nx200 0.25 200 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    #initRunPost ${cRoot}/c1/nx100 0.5 100 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    #initRunPost ${cRoot}/c1/nx050 1 50 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    #initRunPost ${cRoot}/c1/nx025 2 25 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
 
-    initRunPost ${cRoot}/c2/nx200 0.5 200 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c2/nx100 1 100 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c2/nx050 2 50 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c2/nx025 4 25 $2 $3 $4 $5 $6 $7 0
+    initRunPost ${cRoot}/c2/nx200 0.5 200 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    initRunPost ${cRoot}/c2/nx100 1 100 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    initRunPost ${cRoot}/c2/nx050 2 50 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    initRunPost ${cRoot}/c2/nx025 4 25 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
 
-    initRunPost ${cRoot}/c5/nx256 1 256 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c5/nx128 2 128 $2 $3 $4 $5 $6 $7 0
-    initRunPost ${cRoot}/c5/nx064 4 64 $2 $3 $4 $5 $6 $7 0
+    initRunPost ${cRoot}/c5/nx256 1 256 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    initRunPost ${cRoot}/c5/nx128 2 128 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
+    initRunPost ${cRoot}/c5/nx064 4 64 $2 $3 $4 $5 $6 $7 $8 $9 ${10} 0
 
     # convergence plot
     ./runScripts/plotErrorNorms.sh T $cRoot
