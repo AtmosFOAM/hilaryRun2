@@ -6,46 +6,44 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
-{
+{   version     2.0;
     format      ascii;
     class       dictionary;
     location    "system";
-    object      controlDict;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     AdImExShallowWaterFoam;
+ddtSchemes
+{
+    default         Euler;
+}
 
-startFrom       startTime;
+gradSchemes
+{
+    default         Gauss linear;
+}
 
-startTime       0;
+divSchemes
+{
+    default         none;
+    div(phi,U)      Gauss linearUpwind linearUpwind;
+}
 
-subSolverTime   0;
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
 
-stopAt          endTime;
+interpolationSchemes
+{
+    default         linear;
+}
 
-endTime         3600; //86400; //1296000;
+snGradSchemes
+{
+    default         uncorrected;
+}
 
-deltaT          3600;
-
-writeControl    runTime;
-
-writeInterval   3600; //43200;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable false;
-
-libs ("libsolverFunctionObjects2.so" "libfiniteVolumeAtmosFOAM.so");
 
 // ************************************************************************* //

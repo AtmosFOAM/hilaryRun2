@@ -14,10 +14,10 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nOuterCorrs 2;
-nPressureCorrs 2;
+nOuterCorrs 1;
+nPressureCorrs 1;
 nNonOrthogCorrs 1;
-timeOffCenter 0.5;
+timeOffCenter 1;
 
 solvers
 {

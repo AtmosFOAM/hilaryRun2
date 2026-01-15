@@ -8,44 +8,31 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      controlDict;
+    class       volScalarField;
+    location    "constant";
+    object      h0;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     AdImExShallowWaterFoam;
+dimensions      [0 1 0 0 0];
 
-startFrom       startTime;
+internalField   uniform 0;
 
-startTime       0;
+boundaryField
+{
+    sides
+    {
+        type            zeroGradient;
+    }
+    originalPatch
+    {
+        type            zeroGradient;
+    }
+    otherSide
+    {
+        type            zeroGradient;
+    }
+}
 
-subSolverTime   0;
-
-stopAt          endTime;
-
-endTime         3600; //86400; //1296000;
-
-deltaT          3600;
-
-writeControl    runTime;
-
-writeInterval   3600; //43200;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision  6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable false;
-
-libs ("libsolverFunctionObjects2.so" "libfiniteVolumeAtmosFOAM.so");
 
 // ************************************************************************* //

@@ -14,7 +14,7 @@ writeCellDataLatLon -constant h0 >> plotting/plothU.out
 writeCellDataLatLon -time $time hTotal >> plotting/plothU.out
 writeCellDataLatLon -time $time U >> plotting/plothU.out
 # Sample the velocity field (can't plot every vector)
-awk 'NR % 13 == 1' $time/U.latLon > $time/U.latLonS
+awk 'NR % 57 == 1' $time/U.latLon > $time/U.latLonS
 
 gmt info $time/hTotal.latLon
 gmt info constant/h0.latLon

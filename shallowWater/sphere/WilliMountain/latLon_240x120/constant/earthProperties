@@ -18,8 +18,8 @@ FoamFile
 earthRadius earthRadius [0 1 0 0 0] 6.37121e6;
 polarCell true;
 maxLonRatio 0;
-nLat 61;
-nLon 120;
+nLat 120;
+nLon 240;
 R 6.37123e6;
 meshRotation (0 0 0);
 endTime endTime [0 0 1 0 0] -1;  // Not used for initialisation

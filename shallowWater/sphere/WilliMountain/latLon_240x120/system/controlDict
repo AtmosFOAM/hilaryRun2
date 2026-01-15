@@ -24,7 +24,7 @@ subSolverTime   0;
 
 stopAt          endTime;
 
-endTime         3600; //86400; //1296000;
+endTime         86400; //1296000;
 
 deltaT          3600;
 
