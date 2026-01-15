@@ -14,9 +14,14 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+nOuterCorrs 2;
+nPressureCorrs 2;
+nNonOrthogCorrs 1;
+timeOffCenter 0.5;
+
 solvers
 {
-    "T|rho|rhoT"
+    "U"
     {
         solver          GAMG; //PBiCGStab; //PBiCG; //smoothSolver;
         //preconditioner  DILU;
@@ -24,18 +29,14 @@ solvers
         tolerance       1e-6;
         relTol          0;
     }
-    "TFCT|rhoFinal"
+    "h"
     {
-        $T;
-        tolerance       1e-16;
+        solver          GAMG; //PBiCGStab; //PBiCG; //smoothSolver;
+        //preconditioner  DILU;
+        smoother        symGaussSeidel;
+        tolerance       1e-6;
+        relTol          0;
     }
-}
-
-PIMPLE
-{
-    nNonOrthogonalCorrectors 0;
-    pRefCell 0;
-    pRefValue 0;
 }
 
 

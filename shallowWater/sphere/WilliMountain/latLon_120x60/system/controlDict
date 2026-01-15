@@ -10,33 +10,42 @@ FoamFile
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSolution;
+    object      controlDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    "T|rho|rhoT"
-    {
-        solver          GAMG; //PBiCGStab; //PBiCG; //smoothSolver;
-        //preconditioner  DILU;
-        smoother        DILUGaussSeidel; //symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0;
-    }
-    "TFCT|rhoFinal"
-    {
-        $T;
-        tolerance       1e-16;
-    }
-}
+application     AdImExShallowWaterFoam;
 
-PIMPLE
-{
-    nNonOrthogonalCorrectors 0;
-    pRefCell 0;
-    pRefValue 0;
-}
+startFrom       startTime;
 
+startTime       0;
+
+subSolverTime   0;
+
+stopAt          endTime;
+
+endTime         172800; //86400; //1296000;
+
+deltaT          3600;
+
+writeControl    runTime;
+
+writeInterval   3600; //43200;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable false;
+
+libs ("libsolverFunctionObjects2.so" "libfiniteVolumeAtmosFOAM.so");
 
 // ************************************************************************* //

@@ -6,36 +6,43 @@
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
-{
+{   version     2.0;
     format      ascii;
     class       dictionary;
     location    "system";
-    object      fvSolution;
+    object      fvSchemes;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
+ddtSchemes
 {
-    "T|rho|rhoT"
-    {
-        solver          GAMG; //PBiCGStab; //PBiCG; //smoothSolver;
-        //preconditioner  DILU;
-        smoother        DILUGaussSeidel; //symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0;
-    }
-    "TFCT|rhoFinal"
-    {
-        $T;
-        tolerance       1e-16;
-    }
+    default         Euler;
 }
 
-PIMPLE
+gradSchemes
 {
-    nNonOrthogonalCorrectors 0;
-    pRefCell 0;
-    pRefValue 0;
+    default         Gauss linear;
+}
+
+divSchemes
+{
+    default         none;
+    div(phi,U)      Gauss linearUpwind linearUpwind;
+}
+
+laplacianSchemes
+{
+    default         Gauss linear uncorrected;
+}
+
+interpolationSchemes
+{
+    default         linear;
+}
+
+snGradSchemes
+{
+    default         uncorrected;
 }
 
 

@@ -29,6 +29,8 @@ postOne  hexagonal/hex5/slotteddeforming/dt_0p02_quinticUpwind_RK4_FCT1 plot
 initRun hexagonal 8 slotted deforming 0.0025 quinticUpwind RK4 1 plot
 postOne  hexagonal/hex8/slotteddeforming/dt_0p0025_quinticUpwind_RK4_FCT1 plot
 
+plotStats
+
 # HeteroSphere Transport
 
 initRun latLon_30_Full 120 slotted varyDensity deforming 0.005 cubicUpwind RK3 1 plot
@@ -99,3 +101,5 @@ initRun cubedSphere 120 slotted varyDensity deforming 0.0025 quinticUpwind RK4 1
 initRun hexagonal   8   slotted varyDensity deforming 0.0025 quinticUpwind RK4 1
 for case in */*/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1; do \
     postOne $case plot; done
+
+plotStats2

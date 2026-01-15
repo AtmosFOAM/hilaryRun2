@@ -8,34 +8,32 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    location    "system";
-    object      fvSolution;
+    class       volVectorField;
+    location    "0";
+    object      U;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-solvers
-{
-    "T|rho|rhoT"
-    {
-        solver          GAMG; //PBiCGStab; //PBiCG; //smoothSolver;
-        //preconditioner  DILU;
-        smoother        DILUGaussSeidel; //symGaussSeidel;
-        tolerance       1e-6;
-        relTol          0;
-    }
-    "TFCT|rhoFinal"
-    {
-        $T;
-        tolerance       1e-16;
-    }
-}
+dimensions      [0 1 -1 0 0];
 
-PIMPLE
+internalField   uniform (0 0 0);
+
+boundaryField
 {
-    nNonOrthogonalCorrectors 0;
-    pRefCell 0;
-    pRefValue 0;
+    sides
+    {
+        type            zeroGradient;
+    }
+    originalPatch
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
+    otherSide
+    {
+        type            fixedValue;
+        value           uniform (0 0 0);
+    }
 }
 
 

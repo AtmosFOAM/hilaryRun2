@@ -279,6 +279,45 @@ function plotStats {
     ev $outFile
 }
 
+function plotStats2 {
+    cases=("latLon_0_P/480x240/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
+           "latLon_30_P/480x240/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
+           "cubedSphere/120x120x6/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
+           "hexagonal/hex8/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1")
+    legends=('Lat-lon' 'Lat-lon rotated' 'Cubed sphere' 'Hexagonal')
+    pens=("0.5,black" "0.5,blue" "0.5,red" "0.5,green")
+    gv=0; nSkip=1; legPos=x1/0.5; colx=1
+    xlabel="Time"; xmin=0; xmax=5; dx=1; ddx=0.5; 
+    
+    inputFiles=`makeInputFiles cTminmax.dat ${cases[*]}`;inputFiles=($inputFiles)
+    echo ${inputFiles[*]}
+
+    outFile=plots/varyDensityTMin.eps; col=3;
+    ylabel="min @~y@~ - 0.1"; ymin=-1e-6; ymax=1e-6; dy=1e-6; ddy=1e-6
+    projection=X15c/5c; yscale="-0.1"
+    source gmtPlot
+    makebb $outFile > /dev/null
+    ev $outFile
+    
+    outFile=plots/varyDensityTMax.eps; col=4; xlabel=""
+    ylabel="max @~y@~ - 1"; ymin=-4e-4; ymax=1e-4; dy=1e-4; ddy=1e-4
+    projection=X15c/5c; yscale=""
+    source gmtPlot
+    makebb $outFile > /dev/null
+    ev $outFile
+
+    echo -e "\n0 1\n5 1" > plots/c1.dat
+    echo -e "\n0 1.7\n5 1.7" > plots/c1p7.dat
+    inputFiles=(${inputFiles[*]} plots/c1.dat plots/c1p7.dat)
+    legends+=('c = 1' 'c = 1.7')
+    pens=(${pens[*]} "0.25,black,1-1" "0.25,black,1-1")
+    outFile=plots/varyDensitycMax.eps; col=2; 
+    ylabel="Courant number"; ymin=0.1; ymax=100; dy=10; ddy=10
+    projection=X15c/10cl; legPos=x1/4.5
+    source gmtPlot
+    ev $outFile
+}
+
 function makeInputFiles {
     file=$1
     shift
