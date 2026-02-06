@@ -1,37 +1,54 @@
 #!/bin/bash -e
 
-if [ "$#" -ne 3 ]
+if [ "$#" -ne 4 ]
 then
-   echo usage: plotErrorNorms.sh var simType scheme
+   echo usage: plotErrorNorms.sh var simType scheme dt0
    exit
 fi
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/runScripts.sh
 
 var=$1
 simType=$2
 scheme=$3
-outFile=plots/${var}errorNorms_${simType}_${scheme}.eps
+dt0=$4
+outFile=plots/${var}errorNorms_${simType}_${scheme}_dt${dt0}.eps
 
 meshTypes=(latLon_0_P latLon_30_P cubedSphere hexagonal)
 
 # Collect error norms and dx for each mesh type
 inputFiles=()
 for meshType in ${meshTypes[*]}; do
-    for case in $meshType/*/$simType/dt*${scheme}*; do
+    ress=`ls -d $meshType/*/constant | awk -F'/' '{print $2}' | \
+        awk '{ match($0, /[0-9]+/); print substr($0, RSTART, RLENGTH) }'`
+    ress="$(echo "$ress" | tr ' ' '\n' | sort -nr | paste -sd' ')"
+    dt=$dt0
+
+    for res in $ress; do
+        dtp=`echo $dt | sed 's/\./p/g'`
+        case=$meshType/*${res}*/$simType/dt_${dtp}_${scheme}*
+        case=`ls -d $case`
+        echo "$case"
         # Find maximum dx if needed
         if [[ ! -a $case/constant/polyMesh/maxDx ]]; then
             cellCentreDistances -case $case | grep Distance | awk '{print $3}' \
                 | sort -n | tail -1 > $case/constant/polyMesh/maxDx
         fi
+        if [[ -f $case/5/${var} && ! -f $case/${var}_5errorNorms.dat ]]; then
+            postOne $case
+        fi
         dx=`cat $case/constant/polyMesh/maxDx`
         errs=`tail -1 $case/${var}_5errorNorms.dat | awk '{print $2, $3, $4}'`
-        echo $dx $errs >> $meshType/${var}_${simType}_${scheme}_errorNormsTmp.dat
+        echo $dx $errs >> $meshType/${var}_${simType}_${scheme}_${dt0}_errorNormsTmp.dat
+        dt=`echo $dt | awk '{print $1*2}'`
     done
     echo "#dx l1 l2 linf" \
-        > $meshType/${var}_${simType}_${scheme}_errorNorms.dat
-    sort -n $meshType/${var}_${simType}_${scheme}_errorNormsTmp.dat \
-        >> $meshType/${var}_${simType}_${scheme}_errorNorms.dat
-    rm $meshType/${var}_${simType}_${scheme}_errorNormsTmp.dat
-    inputFiles=(${inputFiles[*]} $meshType/${var}_${simType}_${scheme}_errorNorms.dat)
+        > $meshType/${var}_${simType}_${scheme}_${dt0}_errorNorms.dat
+    sort -n $meshType/${var}_${simType}_${scheme}_${dt0}_errorNormsTmp.dat \
+        >> $meshType/${var}_${simType}_${scheme}_${dt0}_errorNorms.dat
+    rm $meshType/${var}_${simType}_${scheme}_${dt0}_errorNormsTmp.dat
+    inputFiles=(${inputFiles[*]} $meshType/${var}_${simType}_${scheme}_${dt0}_errorNorms.dat)
 done
 
 mkdir -p plots

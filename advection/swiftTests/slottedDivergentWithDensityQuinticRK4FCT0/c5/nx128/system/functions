@@ -60,4 +60,36 @@ minMax
     #};
 }
 
+conserve
+{
+    type coded;
+    // Load the library containing the 'coded' functionObject
+    libs            ("libutilityFunctionObjects.so" "libfiniteVolumeAtmosFOAM.so");
+    
+    codeInclude
+    #{
+    #include "volFields.H"
+    #include "fvcVolumeIntegrate.H"
+    #};
+    
+    codeExecute
+    #{
+    const volScalarField& rho
+    (
+        mesh().lookupObject<volScalarField>("rho")
+    );
+    const volScalarField& T
+    (
+        mesh().lookupObject<volScalarField>("T")
+    );
+    
+    scalar V = sum(mesh().V()).value();
+    scalar rhoMean = fvc::domainIntegrate(rho).value()/V;
+    scalar TMean = fvc::domainIntegrate(T).value()/V;
+    
+    Info << "Mean rho = " << rhoMean << endl;
+    Info << "Mean T = " << TMean << endl;
+    #};
+}
+
 // ************************************************************************* //

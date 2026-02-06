@@ -24,7 +24,7 @@ solvers
         tolerance       1e-6;
         relTol          0;
     }
-    TFCT
+    "TFCT|rhoFinal"
     {
         $T;
         tolerance       1e-16;

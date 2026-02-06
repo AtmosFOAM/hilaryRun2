@@ -224,6 +224,14 @@ function postOne {
             withRho=0
         fi
     fi
+    
+    if [[ $withRho == 1 ]]; then
+        echo "#Time rhoMin rhoMax" > $case/rhoMinMax.dat
+        grep "^rho goes from" $case/log | awk '{print $5, $7+$9}' \
+            >> $case/rhoMinMax.dat
+        gmt info $case/rhoMinMax.dat | awk '{print $5, $6}' \
+            | awk -F '[ |<|/|>]' '{print $2,$7}' > $case/rhoMinMaxAll.dat
+    fi
         
     if [[ $2 == plot ]]; then
         foamPostProcess -case $case -time 2.5 -func CourantNoU
@@ -280,10 +288,10 @@ function plotStats {
 }
 
 function plotStats2 {
-    cases=("latLon_0_P/480x240/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
-           "latLon_30_P/480x240/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
-           "cubedSphere/120x120x6/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1"
-           "hexagonal/hex8/slottedvaryDensitydeforming/dt_0p0025_quinticUpwind_RK4_FCT1")
+    cases=("latLon_0_P/480x240/slottedvaryDensitydeforming/dt_0p005_quinticUpwind_RK4_FCT1"
+           "latLon_30_P/480x240/slottedvaryDensitydeforming/dt_0p005_quinticUpwind_RK4_FCT1"
+           "cubedSphere/120x120x6/slottedvaryDensitydeforming/dt_0p005_quinticUpwind_RK4_FCT1"
+           "hexagonal/hex8/slottedvaryDensitydeforming/dt_0p005_quinticUpwind_RK4_FCT1")
     legends=('Lat-lon' 'Lat-lon rotated' 'Cubed sphere' 'Hexagonal')
     pens=("0.5,black" "0.5,blue" "0.5,red" "0.5,green")
     gv=0; nSkip=1; legPos=x1/0.5; colx=1
@@ -313,7 +321,7 @@ function plotStats2 {
     pens=(${pens[*]} "0.25,black,1-1" "0.25,black,1-1")
     outFile=plots/varyDensitycMax.eps; col=2; 
     xlabel="Time"; ylabel="Courant number"; ymin=0.1; ymax=100; dy=10; ddy=10
-    projection=X12c/8cl; legPos=x1/4.5
+    projection=X12c/8cl; legPos=x4.4/3.1
     source gmtPlot
     ev $outFile
 }
