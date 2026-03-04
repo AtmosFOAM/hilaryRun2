@@ -14,14 +14,33 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-earthRadius earthRadius [0 1 0 0 0] 0.99;
-polarCell PCELL;
-maxLonRatio SKIP;
-nLat NY;
-nLon NX;
-R 1.01;
-meshRotation (ROT 0 0);
+// Mesh properties
+earthRadius earthRadius [0 1 0 0 0] 6.37121e6;
+polarCell true;
+maxLonRatio 2;
+nLat 61;
+nLon 120;
+R 6.37123e6;
+meshRotation (0 0 0);
 nLayers 1;
 expansionRatio 1;
+endTime endTime [0 0 1 0 0] -1;  // Not used for initialisation
+
+// Physical properties
+magg magg [0 1 -2 0 0] 9.80616;
+rotating true;
+Omega Omega [0 0 -1 0 0] (0 0 7.292e-5);
+H     H     [0 1 0 0 0] 6000;
+
+// Mountain properties (tracerType geodesicCone)
+radius 20; // degrees
+lonCentre 270; // degrees
+latCentre 30; // degrees
+maxTracer 2000; // mountain height
+
+// Initial height and velocity (tracerType geodesicSolidBody)
+H0 H0 [0 1 0 0 0]  5960;
+u0 u0 [0 1 -1 0 0] 20;
+linear false;
 
 // ************************************************************************* //

@@ -7,21 +7,31 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     7.0;
+    version     2.0;
     format      ascii;
     class       dictionary;
-    object      earthProperties;
+    location    "system";
+    object      tracerDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-earthRadius earthRadius [0 1 0 0 0] 0.99;
-polarCell PCELL;
-maxLonRatio SKIP;
-nLat NY;
-nLon NX;
-R 1.01;
-meshRotation (ROT 0 0);
-nLayers 1;
-expansionRatio 1;
+type geodesicSinusoidal;
+Rsphere 1;
+//radius = 1;
+// c + (a_x + b_x*Foam::cos(k_x*(x-phi_x)))
+// * (a_y + b_y*Foam::cos(k_y*(y-phi_y))
+// * (a_z + b_z*Foam::cos(2*M_PI*k_z*(z-phi_z)/L_z));
+// Where x = longitude, y = latitude and z = altitude
+c  0.8;
+a_x 0;
+a_y 0;
+a_z 1;
+b_x 0.2;
+b_y 1;
+b_z 0;
+k_x 2;
+k_y 2;
+L_z 1;
+phi_x 0.785398163;
+phi_y 0.785398163;
 
-// ************************************************************************* //

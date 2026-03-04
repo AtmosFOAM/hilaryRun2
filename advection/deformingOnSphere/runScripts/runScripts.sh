@@ -121,7 +121,7 @@ function initialise {
 
 function testCase {
     if [ "$#" -ne 5 ]; then
-        echo usage: testCase caseRoot dt cubicUpwind\|quinticUpwind RK3\|RK4 nFCT
+        echo usage: testCase caseRoot dt cubicUpwind\|quinticUpwind RK3\|RK4\|RK4e nFCT
         return 1
     fi
     caseRoot=$1
@@ -151,8 +151,11 @@ function testCase {
         RK='3 3((1 0 0)\n                        (0.25 0.25 0)                        (0.16666666667 0.16666666667 0.66666666666))'
     elif [[ $timeScheme == RK4 ]]; then
         RK='4 4((0.5 0 0 0)\n          (0 0.5 0 0)\n          (0 0 1 0)\n          (0.16666666667 0.33333333333 0.33333333333 0.16666666667))'
+    elif [[ $timeScheme == RK4e ]]; then
+        RK='4 4((0.5 0 0 0)\n          (0 0.5 0 0)\n          (0 0 1 0)\n          (0.16666666667 0.33333333333 0.33333333333 0.16666666667))'
+         BETACOEFFS='0 0 0'
     else
-        echo timeScheme $timeScheme not known. Known schemes are RK3 and RK4
+        echo timeScheme $timeScheme not known. Known schemes are RK3 and RK4 and RK4e
         return 1
     fi
     
@@ -170,7 +173,7 @@ function testCase {
 function initRun {
     if [ "$#" -lt 9 ]; then
         echo usage: initRunPost meshType nx tracerType densityType velocityType\
-                    dt cubicUpwind\|quinticUpwind RK3\|RK4 nFCT [plot]
+                    dt cubicUpwind\|quinticUpwind RK3\|RK4\|RK4e nFCT [plot]
         return 1
     fi
     meshType=$1
@@ -334,4 +337,19 @@ function makeInputFiles {
         files=(${files[*]} $dir/$file)
     done
     echo ${files[*]}
+}
+
+function CPUtime {
+    if [ "$#" -ne 1 ]; then
+        echo usage: CPUtime case
+        return 1
+    fi
+    
+    case=$1
+    CPU0=`grep ClockTime $case/log | head -1 | awk '{print $7}'`
+    CPU1=`grep ClockTime $case/log | tail -1 | awk '{print $7}'`
+    nTimes=`grep ClockTime $case/log | wc | awk '{print $1}'`
+    nCells=`grep nFaces $case/constant/polyMesh/boundary | tail -1 | awk -F'[\t ;]+' '{print $3}'`
+    CPU=`echo | awk '{printf 1e6*('$CPU1-$CPU0')/('$nTimes-1')/'$nCells'}'`
+    echo CPU time per cell per time step = $CPU micro s
 }

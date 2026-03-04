@@ -3,6 +3,32 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/runScripts.sh
 
+# Timing Runs
+type=slottedvaryDensitydeformingConstant
+for root in latLon_0_P/480x240 cubedSphere/120x120x6 hexagonal/hex8; do
+            #  latLon_30_P/480x240; do
+    for dt in 0p001; do # 0p005 0p01; do
+        for RK in RK4; do # RK4e; do
+            case=$root/$type/dt_${dt}_quinticUpwind_${RK}_FCT1
+            echo $case
+            foamRun -case $case >& $case/log
+            CPUtime $case | tee $case/CPUtime.dat
+        done
+    done
+done
+
+# Slotted sphere with explicit time stepping
+initRun latLon_0_Full 60 slotted noDensity deforming 0.005 quinticUpwind RK4e 0
+initRun latLon_0_Full 60 slotted withDensity deforming 0.005 quinticUpwind RK4e 1
+
+initRun latLon_0_Full 240 slotted withDensity deforming 0.001 quinticUpwind RK4 1
+postOne latLon_0_Full/480x240/slottedwithDensitydeforming/dt_0p001_quinticUpwind_RK4_FCT1 plot
+
+initRun latLon_0_Full 240 slotted withDensity deforming 0.001 quinticUpwind RK4e 1
+postOne latLon_0_Full/480x240/slottedwithDensitydeforming/dt_0p001_quinticUpwind_RK4e_FCT1 plot
+
+
+# Slotted sphere test cases with small time steps
 initRun latLon_30_Full 120 slotted deforming 0.005 cubicUpwind RK3 1 #plot
 postOne latLon_30_Full/240x120/slotteddeforming/dt_0p005_cubicUpwind_RK3_FCT1 plot
 initRun latLon_30_Full 120 slotted deforming 0.005 quinticUpwind RK4 1 #plot

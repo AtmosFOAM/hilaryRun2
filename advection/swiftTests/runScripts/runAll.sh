@@ -14,6 +14,11 @@
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/runScripts.sh
 
+# Comparison with Amber
+cRoot=smoothDeformingNoDensityQuinticcRK3FCT1
+params="smooth deforming noDensity quinticUpwind RK3 1 1.6 0.43 0.43 plot"
+initRunPost ${cRoot}/c05/nx064 0.4 64 $params
+
 cRoot=smoothUniformNoDensityCubicRK3FCT0
 params="smooth uniform noDensity cubicUpwind RK3 0 1.6 0.43 0.43 plot"
 #initRunPost ${cRoot}/c05/nx128 0.2 128 $params

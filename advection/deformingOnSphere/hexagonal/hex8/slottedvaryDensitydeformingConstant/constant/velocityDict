@@ -7,21 +7,16 @@
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     7.0;
+    version     2.0;
     format      ascii;
     class       dictionary;
-    object      earthProperties;
+    location    "system";
+    object      velocityDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-earthRadius earthRadius [0 1 0 0 0] 0.99;
-polarCell PCELL;
-maxLonRatio SKIP;
-nLat NY;
-nLon NX;
-R 1.01;
-meshRotation (ROT 0 0);
-nLayers 1;
-expansionRatio 1;
-
-// ************************************************************************* //
+timeVaryingWind false;
+type deformationalNonDivergentGeodesic;
+earthRadius 1;
+deformationScale 10;
+endTime endTime [0 0 1 0 0] 5;
