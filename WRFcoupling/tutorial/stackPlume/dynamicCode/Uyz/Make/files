@@ -1,0 +1,6 @@
+# dynamicCode:
+# SHA1 = 130b8572250d441b8020535fe6dea5587a9db674
+
+codedFunctionObjectTemplate.C
+
+LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/libUyz_130b8572250d441b8020535fe6dea5587a9db674
