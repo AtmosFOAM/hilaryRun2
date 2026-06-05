@@ -1,0 +1,33 @@
+#!/bin/bash -e
+rm -rf [0-9]*  constant/polyMesh system/snappyHexMeshDict \
+    system/blockMeshDict
+
+# Mesh generation
+snappyHexMeshConfig \
+    -bounds '(-50 -1 0)(950 1 200)' \
+    -nCells '(50 1 10)' \
+    -clearBoundary \
+    -xMinPatch 'inletWind patch' \
+    -yMinPatch 'front patch' \
+    -yMaxPatch 'back patch' \
+    -zMinPatch 'ground wall' \
+    -defaultPatch 'outlet patch' \
+    -insidePoint '(0 0 50)' \
+    -refinementDists '(stack 6 3)' \
+    #-refinementBoxes '
+    #                     ((0 -10 0) (10 10 20) 2))
+    #                 '
+
+blockMesh
+foamDictionary -entry snap -set off system/snappyHexMeshDict
+snappyHexMesh
+# Make the mesh 2d
+extrudeMesh
+
+# Initialization
+rm -rf 0; cp -r init0 0
+setAtmBoundaryLayer
+
+# Run
+foamRun >& log & sleep 0.01;tail -f log
+
