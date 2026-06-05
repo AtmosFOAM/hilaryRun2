@@ -5,8 +5,8 @@ source $SCRIPT_DIR/runScripts.sh
 
 # Timing Runs
 type=slottedvaryDensitydeformingConstant
-for root in latLon_0_P/480x240 cubedSphere/120x120x6 hexagonal/hex8; do
-            #  latLon_30_P/480x240; do
+for root in \#latLon_0_P/480x240 cubedSphere/120x120x6 hexagonal/hex8; do
+              latLon_30_P/480x240; do
     for dt in 0p001; do # 0p005 0p01; do
         for RK in RK4; do # RK4e; do
             case=$root/$type/dt_${dt}_quinticUpwind_${RK}_FCT1

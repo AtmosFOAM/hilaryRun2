@@ -1,0 +1,17 @@
+);
+
+boundaryField
+{
+    originalPatch
+    {
+        type            zeroGradient;
+    }
+    otherSide
+    {
+        type            zeroGradient;
+    }
+}
+
+
+// ************************************************************************* //
+
