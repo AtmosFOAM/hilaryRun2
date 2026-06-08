@@ -37,13 +37,13 @@ flipNormals FLIP;
 extrudeModel        linearRadial;
 //extrudeModel        radial;
 
-nLayers             1;
-expansionRatio      1.0;
 
 linearRadialCoeffs
 {
     R        1.01;
     Rsurface 0.99;
+    nLayers             1;
+    expansionRatio      1.0;
 }
 //radialCoeffs
 //{

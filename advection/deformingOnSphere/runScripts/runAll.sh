@@ -68,6 +68,8 @@ initRun latLon_0_P 240 smooth varyDensity deforming 0.005 quinticUpwind RK4 0
 initRun latLon_0_P 120 smooth varyDensity deforming 0.01 quinticUpwind RK4 0
 initRun latLon_0_P 60 smooth varyDensity deforming 0.02 quinticUpwind RK4 0
 
+initRun latLon_0_R16 60 smooth varyDensity deforming 0.02 quinticUpwind RK4 0
+
 initRun cubedSphere 120 smooth varyDensity deforming 0.005 quinticUpwind RK4 0
 initRun cubedSphere 60 smooth varyDensity deforming 0.01 quinticUpwind RK4 0
 initRun cubedSphere 30 smooth varyDensity deforming 0.02 quinticUpwind RK4 0
@@ -130,11 +132,17 @@ initRun latLon_30_P 240 slotted varyDensity deforming 0.005 quinticUpwind RK4 1
 initRun latLon_0_P  240 slotted varyDensity deforming 0.005 quinticUpwind RK4 1
 initRun cubedSphere 120 slotted varyDensity deforming 0.005 quinticUpwind RK4 1
 initRun hexagonal   8   slotted varyDensity deforming 0.005 quinticUpwind RK4 1
+initRun hexagonal   7   slotted varyDensity deforming 0.01 quinticUpwind RK4 1
+initRun hexagonal   6   slotted varyDensity deforming 0.02 quinticUpwind RK4 1
+initRun hexagonal   5   slotted varyDensity deforming 0.02 quinticUpwind RK4 1
+initRun hexagonal   4   slotted varyDensity deforming 0.05 quinticUpwind RK4 1
 for case in */*/slottedvaryDensitydeforming/dt_0p005_quinticUpwind_RK4_FCT1; do \
     postOne $case plot; done
 
 plotStats2
 
+initRun latLon_0_P   60 slotted varyDensity deforming 0.02 quinticUpwind RK4 1
+initRun latLon_0_R16 60 slotted varyDensity deforming 0.02 quinticUpwind RK4 1
 
 # HeteroSphere Transport - old simulations
 ###############################################

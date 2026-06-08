@@ -3,7 +3,7 @@
 # Generate a new mesh for a new case
 function meshGen {
     if [ "$#" -lt 2 ]; then
-        echo usage: meshGen latLon_0_Full\|latLon_30_Full\|latLon_0_P\|latLon_30_P\|latLon_0_Skipped\|latLon_30_Skipped\|cubedSphere\|hexagonal RES [plot]
+        echo usage: meshGen latLon_0_Full\|latLon_30_Full\|latLon_0_P\|latLon_30_P\|latLon_0_Skipped\|latLon_30_Skipped\|latLon_0_R16\|cubedSphere\|hexagonal RES [plot]
         return 1
     fi
 
@@ -23,12 +23,17 @@ function meshGen {
         cp -r runScripts/system $case
         if [[ ! -a $case/constant/polyMesh/points ]]; then
             nSkip=`if [[ $subType == Skipped ]]; then echo 2; else echo 0; fi`
-            polarCell=`if [[ $subType == P ]]; then echo true; else echo false; fi`
+            polarCell=`if [[ $subType == P || $sugType == R4 ]]; then
+                echo true; else echo false; fi`
             sed -e 's/NX/'$nx'/g' -e 's/NY/'$ny'/g' -e 's/SKIP/'$nSkip'/g' \
                 -e 's/ROT/'$rot'/g' -e 's/PCELL/'$polarCell'/g' \
                 runScripts/constant/earthProperties \
                     >$case/constant/earthProperties
             sphPolarLatLonMesh -case $case >& $case/sphPolarLatLonMesh.log
+            if [[ $subType == R16 ]]; then
+                refineMesh -case $case >& $case/refineMesh.log
+                #extrudeMesh -case $case >& $case/extrudeMesh.log
+            fi
         fi
     elif [[ $meshType == cubedSphere ]]; then
         case=${fullMeshType}/${res}x${res}x6
@@ -60,7 +65,8 @@ function meshGen {
     
         if [[ $plot == plot ]]; then
             gmtFoam -case $case mesh >& $case/gmtFoam.log
-            ev $case/constant/mesh.pdf
+            gmtFoam -case $case Tmesh >& $case/gmtFoam.log
+            ev $case/constant/*mesh.pdf
         fi
     fi
     echo $case
@@ -102,7 +108,8 @@ function initialise {
             >& $case/setTracerField.log
         if [[ $plot == plot ]]; then
             gmtFoam -case $case -time 0 UT >& $case/gmtFoam.log
-            ev $case/0/UT.pdf
+            gmtFoam -case $case -time 0 Tmesh >& $case/gmtFoam.log
+            ev $case/0/*.pdf
         fi
         if [[ $densityType == varyDensity ]]; then
             cp runScripts/system/functionsWithDensity \
@@ -188,10 +195,8 @@ function initRun {
     plot=${10}
     case=`meshGen $meshType $nx $plot`
     echo $case
-    ls $case/*.log
     case=`initialise $case $tracerType $densityType $velocityType $plot`
     echo $case
-    ls $case/*.log
     case=`testCase $case $dt $spaceScheme $timeScheme $nFCT`
     echo $case
     foamRun -case $case >& $case/log &
@@ -237,11 +242,11 @@ function postOne {
     fi
         
     if [[ $2 == plot ]]; then
-        foamPostProcess -case $case -time 2.5 -func CourantNoU
-        gmtFoam -case $case -time 2.5 Tslot
-        foamPostProcess -case $case -time $T -func CourantNoU
-        gmtFoam -case $case -time $T Tslot
-        ev $case/*/Tslot.pdf
+        for time in 0.5 2.5 5; do
+            foamPostProcess -case $case -time $time -func CourantNoU
+            gmtFoam -case $case -time $time TslotRaw
+            ev $case/$time/TslotRaw.pdf
+        done
         
         if [[ $withRho == 1 ]]; then
             gmtFoam -case $case -time 2.5 rho
