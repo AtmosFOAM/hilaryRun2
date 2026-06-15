@@ -127,7 +127,7 @@ initRunPost ${cRoot}/c5/nx128 2 128 $params
 #####################################################
 cRoot=smoothUniformNoDensityQuinticRK4FCT0
 params="smooth uniform noDensity quinticUpwind RK4 0 1.7 0.45 0.39"
-#convergenceTest $cRoot $params
+convergenceTest $cRoot $params
 
 cRoot=smoothUniformWithDensityQuinticRK4FCT0
 params="smooth uniform withDensity quinticUpwind RK4 0 1.7 0.45 0.39"

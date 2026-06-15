@@ -25,17 +25,17 @@ for case in $root/c05 \
         res=`echo $dir | awk -F"$case/nx" '{print $2}'`
         echo $case $res
         tail -1 $case/nx$res/${var}errorNorms.dat \
-                | awk '{print 1/'$((10#$res))', $2, $3, $4, $5, $6}' \
+                | awk '{print 1000/'$((10#$res))', $2, $3, $4, $5, $6}' \
                 >> $case/plots/${var}errorNorms.dat
     done
     inputFiles=(${inputFiles[*]} $case/plots/${var}errorNorms.dat)
 done
 
 mkdir -p plots
-echo -e "#dx error\n0.05 1\n0.005 .1" > plots/1stOrder.dat
-echo -e "#dx error\n0.05 0.1\n0.005 .001" > plots/2ndOrder.dat
-echo -e "#dx error\n0.05 1e-3\n0.005 1e-6" > plots/3rdOrder.dat
-echo -e "#dx error\n0.05 1e-4\n0.005 1e-8" > plots/4thOrder.dat
+echo -e "#dx error\n50 1\n5 .1" > plots/1stOrder.dat
+echo -e "#dx error\n50 0.1\n5 .001" > plots/2ndOrder.dat
+echo -e "#dx error\n50 1e-3\n5 1e-6" > plots/3rdOrder.dat
+echo -e "#dx error\n50 1e-4\n5 1e-8" > plots/4thOrder.dat
 
 inputFiles=(${inputFiles[*]} plots/4thOrder.dat\
             plots/3rdOrder.dat  plots/2ndOrder.dat  plots/1stOrder.dat)
@@ -50,8 +50,8 @@ symbols=("x7p" "c7p" "+7p" "s7p"
 #spens=("black" "blue" "red" "green" "cyan" "magenta" "" "" "")
 xlabel='@~D@~x'
 ylabel=''
-xmin=0.003
-xmax=0.05
+xmin=3
+xmax=50
 dx=2
 ddx=1
 dxg=10

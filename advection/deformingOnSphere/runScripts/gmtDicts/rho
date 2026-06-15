@@ -21,7 +21,7 @@ plotBoundaryDots false;
 FieldsToPlot
 (
     [rho filledContours 0.575 1.025 0.05 "$GMTU/colours/red_white_blue.cpt"]
-    [Co contours 1 50 1 "black"]
+    [Co contours 1 50 1 "1,black"]
 );
 
 // options
