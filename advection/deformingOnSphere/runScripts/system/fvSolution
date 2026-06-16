@@ -24,10 +24,10 @@ solvers
         tolerance       1e-6;
         relTol          0;
     }
-    "TFCT|rhoFinal"
+    "TFCT|rhoFinal|Tfinal"
     {
         $T;
-        tolerance       1e-16;
+        tolerance       1e-15;
     }
 }
 

@@ -74,7 +74,7 @@ function meshGen {
 
 function initialise {
     if [ "$#" -lt 4 ]; then
-        echo usage: initialise caseRoot smooth\|slotted \
+        echo usage: initialise caseRoot smooth\|slotted\|uni \
                     noDensity\|uniDensity\|varyDensity deforming [plot]
         return 1
     fi
@@ -201,6 +201,19 @@ function initRun {
     echo $case
     foamRun -case $case >& $case/log &
     echo Running with output in $case/log
+}
+
+function memRun {
+    if [ "$#" -ne 1 ]; then
+        echo usage: memRun case
+        return 1
+    fi
+    case=$1
+    foamRun -case $case >& $case/log2 &
+    PID=$!
+    pidstat -r -p $PID 1 > $case/memory.dat &
+    sleep 0.1
+    tail -f $case/memory.dat
 }
 
 function postOne {

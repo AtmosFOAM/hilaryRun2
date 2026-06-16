@@ -1,0 +1,41 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      refineMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+coordinates
+{
+    type        patchLocal;
+    patch       originalPatch;
+
+    e1 (0 0 1);
+    e2 (0 1 0);
+
+    directions  (e1 e2);
+}
+
+zones
+{
+    level1
+    {
+        type    box;
+        box     (0.1 0.2 -0.1) (1.2 0.9 0.7);
+    }
+    level2
+    {
+        type    box;
+        box     (0.1 0.45 0.1) (1.2 0.75 0.5);
+    }
+}
+
+// ************************************************************************* //

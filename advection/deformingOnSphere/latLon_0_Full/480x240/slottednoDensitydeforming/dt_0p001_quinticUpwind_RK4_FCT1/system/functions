@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  dev
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      functions;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeFunc multiScalarRKTransport
+(
+    nFields=1,
+    fields=(T),
+    FCTiters=(1),
+    FCTlimits=(()),
+    advectingFlux=phiv,
+    massFlux=none,
+    RK_ButcherCoeffs=4 4((0.5 0 0 0)
+          (0 0.5 0 0)
+          (0 0 1 0)
+          (0.16666666667 0.33333333333 0.33333333333 0.16666666667)),
+    betaCoeffs=(1.7 0.45 0.39),
+    correctionScheme=quinticUpwind,
+    velocityFieldDict=velocityDict
+)
+
+minMax
+{
+    type coded;
+    // Load the library containing the 'coded' functionObject
+    libs            ("libutilityFunctionObjects.so" "libfiniteVolumeAtmosFOAM.so");
+
+    codeInclude
+    #{
+        #include "volFields.H"
+    #};
+
+    codeExecute
+    #{
+        const volScalarField& T
+        (
+            mesh().lookupObject<volScalarField>("T")
+        );
+
+        Info << "T goes from = " << min(T).value() << " to 1 + "
+             << max(T).value()-1 << endl;
+    #};
+}
+
+// ************************************************************************* //

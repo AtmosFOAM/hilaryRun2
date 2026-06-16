@@ -27,6 +27,14 @@ postOne latLon_0_Full/480x240/slottedwithDensitydeforming/dt_0p001_quinticUpwind
 initRun latLon_0_Full 240 slotted withDensity deforming 0.001 quinticUpwind RK4e 1
 postOne latLon_0_Full/480x240/slottedwithDensitydeforming/dt_0p001_quinticUpwind_RK4e_FCT1 plot
 
+# Memory usage
+for case in */*/*Constant/*RK4*; do
+    echo $case
+    #memRun $case
+    awk 'NR > 3 { if ($8 > max) max = $8 } END { print max " KB" }' \
+        $case/memory.dat > $case/RSSmemMax.dat
+    cat $case/RSSmemMax.dat
+done
 
 # Slotted sphere test cases with small time steps
 initRun latLon_30_Full 120 slotted deforming 0.005 cubicUpwind RK3 1 #plot
@@ -120,6 +128,12 @@ initRun hexagonal 5 smooth noDensity deforming 0.04 quinticUpwind RK4 0
 ./runScripts/plotErrorNorms.sh T smoothnoDensitydeforming quinticUpwind_RK4_FCT0 0.005
 
 plotStats2
+
+# Consistency with continuity
+initRun latLon_30_P 120 uni varyDensity deforming 0.01 quinticUpwind RK4 0
+sumFields -case $case 0.01 Tdiff 0.01 T 0 T -scale1 -1
+foamPostProcess -case $case -time 0.01 -func CourantNoU
+gmtFoam -case $case -time 0.01 rhoTdiff
 
 # High resolution plots
 for case in */*/smoothvaryDensitydeforming/dt_0p01_quinticUpwind_RK4_FCT0 \
