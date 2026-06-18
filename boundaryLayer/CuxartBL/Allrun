@@ -1,0 +1,23 @@
+#!/bin/bash -e
+rm -rf [0-9]*  constant/polyMesh
+
+# Mesh generation
+blockMesh
+
+# Initialization
+rm -rf 0; cp -r init0 0
+
+# Calculate equilibrium boundary layer profile
+setAtmBoundaryLayer
+
+# Run
+foamRun >& log & sleep 0.01;tail -f log
+
+# Plot graphs
+time=32400
+for f in U T nut alphat k epsilon; do
+    writeCellDataxyz -time $time $f
+    head -n 1 $ftime; tail -n +2 file.txt | sort -k3,3n;
+    gmtPlot plots/plot${f}.gmt
+done
+
