@@ -18,14 +18,14 @@ convertToMeters 1;
 
 vertices
 (
-    (-1 -1 0)
-    (1 -1 0)
-    (1 1 0)
-    (-1 1 0)
-    (-1 -1 400)
-    (1 -1 400)
-    (1 1 400)
-    (-1 1 400)
+    (-1e4 -1e4 0)
+    (1e4 -1e4 0)
+    (1e4 1e4 0)
+    (-1e4 1e4 0)
+    (-1e4 -1e4 400)
+    (1e4 -1e4 400)
+    (1e4 1e4 400)
+    (-1e4 1e4 400)
 );
 
 blocks
@@ -71,7 +71,8 @@ boundary
     }
     front
     {
-        type patch;
+        type cyclic;
+        neighbourPatch back;
         faces
         (
             (0 1 5 4)
@@ -79,7 +80,8 @@ boundary
     }
     back
     {
-        type patch;
+        type cyclic;
+        neighbourPatch front;
         faces
         (
             (3 7 6 2)

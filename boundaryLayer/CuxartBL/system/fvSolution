@@ -33,7 +33,7 @@ solvers
     {
         solver          smoothSolver;
         smoother        symGaussSeidel;
-        tolerance       1e-10;
+        tolerance       1e-6;
         relTol          0.1;
     }
 
@@ -46,20 +46,13 @@ solvers
 
 PIMPLE
 {
-    momentumPredictor off;
+    momentumPredictor on;
     nOuterCorrectors 2;
-    nCorrectors     2;
-    nNonOrthogonalCorrectors 1;
+    nCorrectors     0;
+    nNonOrthogonalCorrectors 0;
     pRefCell        0;
-    pRefValue       0;
+    pRefValue       1e5;
 }
 
-relaxationFactors
-{
-    equations
-    {
-        ".*"  1;
-    }
-}
 
 // ************************************************************************* //

@@ -2,28 +2,37 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  13
+    \\  /    A nd           | Version:  14
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      p_rgh;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [1 -1 -2 0 0 0 0];
 
-internalField   uniform 1e5;
+internalField   uniform 0;
 
 boundaryField
 {
-    ".*"
+    ground
     {
-        type            fixedFluxPressure;
-        value           $internalField;
+        type    fixedGradient;
+        gradient uniform -9.81; //-13.00806;
     }
+
+    top
+    {
+        type    fixedGradient;
+        gradient uniform 9.81; //12.90321548;
+    }
+
+    ".*"{type cyclic;}
 
     #includeEtc "caseDicts/setConstraintTypes"
 }

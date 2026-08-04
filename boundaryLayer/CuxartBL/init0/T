@@ -2,53 +2,57 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  13
+    \\  /    A nd           | Version:  14
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
     class       volScalarField;
+    location    "0";
     object      T;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 dimensions      [0 0 0 1 0 0 0];
 
-internalField   uniform 300;
+internalField
+{
+    type coded;
+    evaluate
+    #{
+        // This is actually theta, but this is a start
+        const scalarField z(C.component(vector::Z));
+        const scalar T0 = 265;
+        field.primitiveFieldRef() = T0 + max(0.01*(z-100), scalar(0));
+    #};
+}
 
 boundaryField
 {
     ground
     {
-        type            fixedValue;
-        value           uniform 300;
+        type            uniformFixedValue;
+        uniformValue coded;
+        name coolingGround;
+        code
+        #{
+            scalar groundTemp = 265 - 0.25*x/3600;
+            return groundTemp;
+        #};
     }
 
     top
     {
-        type            zeroGradient;
+        type            fixedGradient;
+        gradient        uniform 0.01;
     }
 
-    inlet
+    "(inlet|outlet|front|back)"
     {
         type            cyclic;
-        value           uniform 300;
     }
 
-    outlet
-    {
-        type            cyclic;
-        value           uniform 300;
-    }
-    front
-    {
-        type           zeroGradient;
-    }
-    back
-    {
-        type           zeroGradient;
-    }
 }
 
 // ************************************************************************* //

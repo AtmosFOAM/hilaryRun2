@@ -14,13 +14,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+Coriolis Coriolis [0 0 -1 0 0] (0 0 1.39e-4);
+Ugeo     Ugeo     [0 1 -1 0 0] (8 0 0);
+
 thermoType
 {
     type            heRhoThermo;
     mixture         pureMixture;
     transport       const;
-    thermo          eConst;
-    equationOfState Boussinesq;
+    thermo          hConst;
+    equationOfState rhoConst;
     specie          specie;
     energy          sensibleInternalEnergy;
 }
@@ -29,17 +32,15 @@ mixture
 {
     specie
     {
-        molWeight       28.9;
+        molWeight       1; //28.9;
     }
     equationOfState
     {
-        rho0            1.2;
-        T0              300;
-        beta            3e-03;
+        rho            1;
     }
     thermodynamics
     {
-        Cv              717;
+        Cp              1000;
         Hf              0;
     }
     transport
