@@ -32,7 +32,7 @@ mixture
 {
     specie
     {
-        molWeight       1; //28.9;
+        molWeight       28.9;
     }
     equationOfState
     {
@@ -40,7 +40,7 @@ mixture
     }
     thermodynamics
     {
-        Cp              1000;
+        Cp              1003.5;
         Hf              0;
     }
     transport

@@ -22,11 +22,25 @@ function plotProfile {
     writeCellDataxyz -time $time $f
     sed '1d' $time/$f.xyz | sort -k3,3n | sponge $time/$f.xyz
     gmtPlot plots/plot${f}.gmt
-    evince $time/$f.eps &
 }
 
-time=32400
-for f in U T nut alphat k epsilon; do
-    plotProfile $time $f
+function plotProfiles {
+    if [ "$#" -ne 1 ]; then
+        echo usage: plotProfiles time
+        return 1
+    fi
+    time=$1
+    for f in U T nut alphat k epsilon; do
+        plotProfile $time $f
+    done
+    cp plots/plotAll.lyx $time
+    lyx --export pdf $time/plotAll.lyx
+
+}
+
+for time in [1-9]*; do
+    plotProfiles $time
 done
+animatePdfs */plotAll.pdf
+
 

@@ -21,15 +21,19 @@ internalField
     type coded;
     evaluate
     #{
-        const volScalarField& k
-        (
-            C.mesh().lookupObject<volScalarField>("k")
-        );
+//        const volScalarField& k
+//        (
+//            C.mesh().lookupObject<volScalarField>("k")
+//        );
+        const scalar zMax = 250;
+        const scalar kMax = 0.4;
+        const scalar kMin = 1e-4;
         const scalarField z(C.component(vector::Z));
         const scalar lambda = 250;
         scalar kappa = 0.4;
+        scalarField k = max(kMax*pow(1 - z/zMax,3), kMin);
         scalarField ell_eps = 1/(1/(kappa*z) + 1/lambda);
-        field.primitiveFieldRef() = pow(k.internalField(), 1.5)/ell_eps;
+        field.primitiveFieldRef() = pow(k, 1.5)/ell_eps;
     #};
 }
 

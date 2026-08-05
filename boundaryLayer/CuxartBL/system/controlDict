@@ -13,7 +13,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libatmosphericModels.so");
+libs            ("libatmosphericModels.so" "libatmosRANS.so");
 
 solver          fluid;
 
@@ -23,17 +23,17 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         32400; // 9 hours
+endTime         10; //32400; // 9 hours
 
-deltaT          1800;
+deltaT          1; //1800;
 
 writeControl    runTime;
 
-writeInterval   1800;
+writeInterval   1; //1800;
 
 purgeWrite      0;
 
-writeFormat     ascii; //binary;
+writeFormat     binary;
 
 writePrecision   6;
 

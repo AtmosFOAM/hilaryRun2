@@ -17,7 +17,7 @@ simulationType RAS;
 
 RAS
 {
-    model               buoyantKEpsilon;
+    model               stableBLkEpsilon;
 
     turbulence          on;
     printCoeffs         on;
