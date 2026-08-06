@@ -20,7 +20,9 @@ RAS
     model               stableBLkEpsilon;
 
     turbulence          on;
-    printCoeffs         on;
+    kMin 1e-6;
+    nutMaxCoeff 1e7;
+    #print;
 }
 
 // ************************************************************************* //

@@ -33,14 +33,18 @@ function plotProfiles {
     for f in U T nut alphat k epsilon; do
         plotProfile $time $f
     done
-    cp plots/plotAll.lyx $time
+    sed 's/TIME/'$time'/g' plots/plotAll.lyx > $time/plotAll.lyx
     lyx --export pdf $time/plotAll.lyx
 
 }
 
-for time in [1-9]*; do
+plotProfiles 0
+cp 0/plotAll.pdf .
+evince plotAll.pdf &
+for time in [1-9]?? [1-9]??? ; do
     plotProfiles $time
+    echo $time
+    pdfunite plotAll.pdf $time/plotAll.pdf plotAll2.pdf
+    mv plotAll2.pdf plotAll.pdf
 done
-animatePdfs */plotAll.pdf
-
 

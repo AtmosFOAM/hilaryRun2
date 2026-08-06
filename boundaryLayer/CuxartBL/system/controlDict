@@ -23,13 +23,13 @@ startTime       0;
 
 stopAt          endTime;
 
-endTime         10; //32400; // 9 hours
+endTime         32400; // 9 hours
 
-deltaT          1; //1800;
+deltaT          10; //1800;
 
 writeControl    runTime;
 
-writeInterval   1; //1800;
+writeInterval   900; //1800;
 
 purgeWrite      0;
 
