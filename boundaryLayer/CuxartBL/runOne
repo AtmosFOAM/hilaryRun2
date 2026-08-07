@@ -1,0 +1,46 @@
+#!/bin/bash -e
+
+if [ "$#" -ne 1 ]; then
+    echo usage: runOne case
+    exit
+fi
+
+case=$1
+if [ ! -d $case ]; then
+    echo $case does not exist
+    exit
+fi
+
+rm -rf $case/[1-9]*  $case/uStar.* $case/log $case/gmt.*
+
+# Mesh generation
+#blockMesh -case $case
+
+# Initialization
+#rm -rf $case/0; cp -r init0 $case/0
+
+# Run
+foamRun -case $case | tee $case/log 
+
+source plots/plotFuncs.sh
+
+# Plot graphs
+./plots/plotUstar.sh $case
+plotProfiles $case 0
+cp $case/0/plotAll.pdf $case
+evince $case/plotAll.pdf &
+HERE=$PWD
+cd $case
+times=`ls -d [1-9]* | sort -n`
+cd $HERE
+for time in $times ; do
+    plotProfiles $case $time
+    echo $time
+    pdfunite $case/$time/plotAll.pdf $case/plotAll.pdf $case/plotAll2.pdf
+    mv $case/plotAll2.pdf $case/plotAll.pdf
+done
+
+#To do:
+# include theta
+# More diagnostics - terms of Sk, length scale
+# Recalc ustar using logs to reduce u*?

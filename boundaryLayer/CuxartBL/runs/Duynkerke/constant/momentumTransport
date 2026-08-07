@@ -23,11 +23,11 @@ RAS
     kMin 1e-6;
     nutMaxCoeff 1e7;
     Cmu             0.09;
-    C1              1.44;
-    C2              1.92;
+    C1              1.46;
+    C2              1.83;
     C3              0;
     sigmak          1;
-    sigmaEps        1.3;
+    sigmaEps        2.38;
     Cg              1;
 
     #print;

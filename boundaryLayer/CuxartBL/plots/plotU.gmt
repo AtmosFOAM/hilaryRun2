@@ -1,5 +1,5 @@
-inputFiles=($time/U.xyz $time/U.xyz)
-outFile=$time/U.eps
+inputFiles=($case/$time/U.xyz $case/$time/U.xyz)
+outFile=$case/$time/U.eps
 col=(3 3)
 colx=(4 5)
 legends=('u' 'v')
@@ -8,7 +8,7 @@ legends=('u' 'v')
 #spens=(psxy pen types in double quotes for the symbols) (optional)
 xlabel='u/v (m/s)'
 ylabel='z (m)'
-xmin=-5
+xmin=-1
 xmax=10
 dx=5
 ddx=1

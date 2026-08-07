@@ -8,29 +8,13 @@
 FoamFile
 {
     format      ascii;
-    class       dictionary;
-    object      momentumTransport;
+    class       uniformDimensionedScalarField;
+    location    "constant";
+    object      pRef;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType RAS;
-
-RAS
-{
-    model               stableBLkEpsilon;
-
-    turbulence          on;
-    kMin 1e-6;
-    nutMaxCoeff 1e7;
-    Cmu             0.09;
-    C1              1.44;
-    C2              1.92;
-    C3              0;
-    sigmak          1;
-    sigmaEps        1.3;
-    Cg              1;
-
-    #print;
-}
+dimensions      [1 -1 -2 0 0 0 0];
+value           100000; //101320;
 
 // ************************************************************************* //

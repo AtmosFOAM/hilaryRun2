@@ -2,35 +2,26 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     | Website:  https://openfoam.org
-    \\  /    A nd           | Version:  13
+    \\  /    A nd           | Version:  14
      \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      momentumTransport;
+    location    "constant";
+    object      MRFProperties;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-simulationType RAS;
-
-RAS
+SRF
 {
-    model               stableBLkEpsilon;
+    cellZone        all;
 
-    turbulence          on;
-    kMin 1e-6;
-    nutMaxCoeff 1e7;
-    Cmu             0.09;
-    C1              1.44;
-    C2              1.92;
-    C3              0;
-    sigmak          1;
-    sigmaEps        1.3;
-    Cg              1;
+    origin      (0 0 0);
+    axis        (0 0 1);
 
-    #print;
+    omega       1.5707; //rad/s //-4.17e-3 [rpm];
 }
 
 // ************************************************************************* //
