@@ -22,23 +22,8 @@ rm -rf $case/[1-9]*  $case/uStar.* $case/log $case/gmt.*
 # Run
 foamRun -case $case | tee $case/log 
 
-source plots/plotFuncs.sh
-
-# Plot graphs
-./plots/plotUstar.sh $case
-plotProfiles $case 0
-cp $case/0/plotAll.pdf $case
-evince $case/plotAll.pdf &
-HERE=$PWD
-cd $case
-times=`ls -d [1-9]* | sort -n`
-cd $HERE
-for time in $times ; do
-    plotProfiles $case $time
-    echo $time
-    pdfunite $case/$time/plotAll.pdf $case/plotAll.pdf $case/plotAll2.pdf
-    mv $case/plotAll2.pdf $case/plotAll.pdf
-done
+# Post processing
+./plots/plots.sh $case
 
 #To do:
 # include theta

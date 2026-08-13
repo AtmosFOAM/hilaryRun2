@@ -9,41 +9,33 @@ FoamFile
 {
     format      ascii;
     class       dictionary;
-    object      controlDict;
+    object      momentumTransport;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-libs            ("libatmosphericModels.so" "libatmosRANS.so" "libfieldFunctionObjects2.so");
+simulationType RAS;
 
-solver          fluid;
+RAS
+{
+    model               stableBLkEpsilon;
 
-startFrom       startTime;
+    turbulence          on;
+    kMin 1e-6;
+    nutMaxCoeff 1e7;
+    Prt             0.85;
+    Cmu             0.033;
+    C1              1.44;
+    C2              1.92;
+    C3              0;
+    sigmak          1;
+    sigmaEps        1.3;
+    Cg              1;
+    kappa           0.4;
+    betam           4.8;
+    betah           7.8;
+    Tref            263.5;
 
-startTime       0;
-
-stopAt          endTime;
-
-endTime         32400; // 9 hours
-
-deltaT          10; //1800;
-
-writeControl    runTime;
-
-writeInterval   1800;
-
-purgeWrite      0;
-
-writeFormat     binary;
-
-writePrecision   6;
-
-writeCompression off;
-
-timeFormat      general;
-
-timePrecision   6;
-
-runTimeModifiable true;
-
+    #print;
+}
 
 // ************************************************************************* //

@@ -8,7 +8,8 @@ function plotProfile {
     f=$3
     writeCellDataxyz -case $case -time $time $f
     sed '1d' $case/$time/$f.xyz | sort -k3,3n | sponge $case/$time/$f.xyz
-    source plots/plot${f}.gmt
+    SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+    source $SCRIPT_DIR/plot${f}.gmt
     . gmtPlot
 }
 
@@ -19,13 +20,14 @@ function plotProfiles {
     fi
     export case=$1
     export time=$2
+    SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
     for f in U T nut alphat k epsilon; do
         plotProfile $case $time $f
     done
-    ./plots/plotFluxes.sh $case $time
-    sed 's/TIME/'$time'/g' plots/plotAll.lyx > $case/$time/plotAll.lyx
+    $SCRIPT_DIR/plotFluxes.sh $case $time
+    sed 's/TIME/'$time'/g' $SCRIPT_DIR/plotAll.lyx \
+        > $case/$time/plotAll.lyx
     lyx --export pdf $case/$time/plotAll.lyx
     pdfCrop $case/$time/plotAll.pdf
-
 }
 

@@ -22,7 +22,7 @@ boundaryField
 {
     ground
     {
-        type            compressible::alphatWallFunction;
+        type            alphatStableBLWallFunction;
         value           uniform 0;
     }
     top

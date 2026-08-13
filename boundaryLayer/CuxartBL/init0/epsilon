@@ -41,7 +41,7 @@ boundaryField
 {
     ground
     {
-        type            epsilonWallFunction;
+        type            epsilonStableBLWallFunction;
     }
     top
     {

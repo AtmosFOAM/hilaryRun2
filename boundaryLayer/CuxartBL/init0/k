@@ -33,8 +33,7 @@ boundaryField
 {
     ground
     {
-        type            kqRWallFunction;
-        value           0;
+        type            zeroGradient;
     }
     top
     {
