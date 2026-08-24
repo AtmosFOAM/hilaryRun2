@@ -29,3 +29,8 @@ foamRun -case $case | tee $case/log
 # include theta
 # More diagnostics - terms of Sk, length scale
 # Recalc ustar using logs to reduce u*?
+
+# Comarisons between cases
+for var in T U; do
+    $SCRIPT_DIR/plotCompare.sh $var
+done

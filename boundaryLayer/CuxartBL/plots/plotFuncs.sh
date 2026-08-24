@@ -3,11 +3,18 @@ function plotProfile {
         echo usage: plotProfile case time field
         return 1
     fi
-    export case=$1
-    export time=$2
+    case=$1
+    time=$2
     f=$3
     writeCellDataxyz -case $case -time $time $f
     sed '1d' $case/$time/$f.xyz | sort -k3,3n | sponge $case/$time/$f.xyz
+    
+    if [ $f == U ]; then
+         mv $case/$time/$f.xyz $case/$time/uvw.xyz
+         awk '{print $1, $2, $3, sqrt($4**2 + $5**2)}' \
+             $case/$time/uvw.xyz > $case/$time/$f.xyz
+    fi
+    
     SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
     source $SCRIPT_DIR/plot${f}.gmt
     . gmtPlot
