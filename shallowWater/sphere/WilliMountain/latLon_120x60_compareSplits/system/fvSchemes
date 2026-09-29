@@ -26,14 +26,11 @@ gradSchemes
 
 divSchemes
 {
-    default         Gauss linearUpwind linearUpwind;
-    div(flux)     Gauss linearUpwind linearUpwind;
-    div(U,h)     Gauss linearUpwind linearUpwind;
-    div(h)     Gauss linearUpwind linearUpwind;
-
-    div(U_S_old,h)   Gauss upwind upwind;
-    div(U_S_new,h)   Gauss upwind upwind;
-    
+    default         none;
+    div(phi,U)      Gauss linearUpwind linearUpwind;
+    div(U,h)        Gauss linearUpwind linearUpwind;
+    div(interpolate((hU|h)),hU) Gauss linearUpwind linearUpwind;
+    div(U)          Gauss linear;
 }
 
 laplacianSchemes

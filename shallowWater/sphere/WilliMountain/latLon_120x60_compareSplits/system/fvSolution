@@ -30,11 +30,8 @@ solvers
         tolerance 1e-8;
         relTol    0;
     }
-}
 
-solvers
-{
-    "U"
+    "(U|hU)"
     {
         solver    GAMG;
         smoother  GaussSeidel;

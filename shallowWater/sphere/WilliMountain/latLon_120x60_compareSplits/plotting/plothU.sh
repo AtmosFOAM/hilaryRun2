@@ -9,7 +9,7 @@ case=.
 if [ "$#" -eq 2 ]; then case=$2; fi
 
 outFile=$case/$time/hU
-echo plotting $outFile.eps.gz. Errors going to plotting/plothU.out
+echo plotting $outFile.eps.gz and $outFile.jpg. Errors going to plotting/plothU.out
 mkdir -p plotting
 
 # Write out the data in lat-lon co-ordinates
@@ -51,9 +51,9 @@ rm $case/constant/*.latLon* $case/$time/*.latLon*
 # Finalise the plot
 #gmt psbasemap -R -J -B60/60 -O >> $outFile.ps
 ps2eps -O $outFile.ps >> plotting/plothU.out 2>&1
-convert -flatten -density 300 -rotate 90 $outFile.eps $case/$time/hUplot.jpg
+convert -flatten -density 300  $outFile.eps $outFile.jpg
 gzip -f $outFile.eps
-evince $outFile.eps.gz &
+echo $outFile.eps.gz $outFile.jpg
 
 # Tidy up
 rm $outFile.ps

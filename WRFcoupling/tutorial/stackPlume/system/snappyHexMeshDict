@@ -1,0 +1,106 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          snappyHexMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#includeEtc     "caseDicts/mesh/generation/snappyHexMeshDict.cfg"
+
+castellatedMesh on;
+
+snap            off;
+
+addLayers       off;
+
+geometry
+{
+    stack
+    {
+        type            triSurface;
+        file            "stack.obj";
+        regions
+        {
+            inlet
+            {
+                name            inlet;
+            }
+        }
+    }
+}
+
+castellatedMeshControls
+{
+    features        ( );
+    refinementSurfaces
+    {
+        stack
+        {
+            level           ( 2 2 );
+            patchInfo
+            {
+                type            wall;
+            }
+            regions
+            {
+                inlet
+                {
+                    level           ( 2 2 );
+                    patchInfo
+                    {
+                        type            patch;
+                    }
+                }
+            }
+        }
+    }
+    refinementRegions
+    {
+        stack
+        {
+            mode            distance;
+            levels          ( ( 6 3 ) );
+        }
+    }
+    insidePoint     ( 0 0 50 );
+    nCellsBetweenLevels 3;
+}
+
+snapControls
+{
+    explicitFeatureSnap off;
+    implicitFeatureSnap on;
+}
+
+addLayersControls
+{
+    layers
+    {
+        "stack.*"
+        {
+            nSurfaceLayers  0;
+        }
+    }
+    relativeSizes   on;
+    expansionRatio  1.2;
+    finalLayerThickness 0.5;
+    minThickness    0.001;
+    firstLayerThickness-disabled 0;
+    maxThicknessToMedialRatio-disabled 0.3;
+}
+
+writeFlags-disabled ( scalarLevels layerSets layerFields );
+
+mergeTolerance  1e-06;
+
+
+// ************************************************************************* //

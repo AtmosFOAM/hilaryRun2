@@ -14,32 +14,15 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-nIterations     2;
-
 nOuterCorrs     2;
-
-nPressureCorrs  2;
-
+nPressureCorrs  1;
 nNonOrthogCorrs 1;
-
 timeOffCentre   0.5;
-
 operatorSplit   off;
 
 solvers
 {
-    "h"
-    {
-        solver          GAMG;
-        smoother        GaussSeidel;
-        tolerance       1e-08;
-        relTol          0;
-    }
-}
-
-solvers
-{
-    "U"
+    "(h|U)"
     {
         solver          GAMG;
         smoother        GaussSeidel;
